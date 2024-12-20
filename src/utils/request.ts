@@ -1,5 +1,5 @@
 import axios, { type AxiosInstance, type AxiosRequestConfig, type AxiosResponse } from "axios";
-import { Toast } from "bootstrap";
+import { showToast } from "./toast";
 
 interface Result<T = any> {
 	code: number | string;
@@ -65,10 +65,10 @@ class Request {
 				loading.className =
 					"d-flex justify-content-center align-items-center position-fixed top-50 start-50 translate-middle";
 				loading.innerHTML = `
-        <div class="spinner-border text-primary" role="status">
-        <span class="visually-hidden">Loading...</span>
-        </div>
-      `;
+					<div class="spinner-border text-primary" role="status">
+					<span class="visually-hidden">Loading...</span>
+					</div>
+				`;
 				document.body.appendChild(loading);
 
 				return config;
@@ -82,8 +82,6 @@ class Request {
 		// 响应拦截器
 		instance.interceptors.response.use(
 			(res: AxiosResponse) => {
-				console.log("🚀 ~ Response:", res);
-
 				// 响应成功，移除 Loading spinner
 				if (loading) {
 					document.body.removeChild(loading);
@@ -96,28 +94,28 @@ class Request {
 					case 200:
 						return data;
 					case 400:
-						this.showErrorToast("请求错误", "无效的请求。请检查请求参数。");
+						showToast("请求错误", "无效的请求，请检查参数。", "danger");
 						break;
 					case 401:
-						this.showErrorToast("认证错误", "您的会话已过期，请重新登录。");
+						showToast("认证错误", "您的会话已过期，请重新登录。", "danger");
 						break;
 					case 403:
-						this.showErrorToast("权限错误", "您没有权限访问该资源。");
+						showToast("权限错误", "您没有权限访问该资源。", "warning");
 						break;
 					case 404:
-						this.showErrorToast("未找到", "请求的资源未找到。");
+						showToast("未找到", "请求的资源未找到。", "warning");
 						break;
 					case 500:
-						this.showErrorToast("服务器错误", "服务器发生错误，请稍后再试。");
+						showToast("服务器错误", "服务器发生错误，请稍后再试。", "danger");
 						break;
 					case 502:
-						this.showErrorToast("网关错误", "无法连接到目标服务器。");
+						showToast("网关错误", "无法连接到目标服务器。", "danger");
 						break;
 					case 503:
-						this.showErrorToast("服务不可用", "服务正在维护，请稍后再试。");
+						showToast("服务不可用", "服务正在维护，请稍后再试。", "warning");
 						break;
 					default:
-						this.showErrorToast("未知错误", "发生了未知的错误，请稍后再试。");
+						showToast("未知错误", "发生了未知的错误，请稍后再试。", "danger");
 						break;
 				}
 
@@ -125,42 +123,15 @@ class Request {
 				return data;
 			},
 			(err) => {
-				console.log("axios error", err);
-
 				if (loading) {
 					document.body.removeChild(loading);
 				}
 
-				// 显示错误提示
-				this.showErrorToast("请求失败", err.message);
-
+				// 显示错误消息
+				showToast("请求失败", err.message, "danger");
 				return Promise.reject(err);
 			},
 		);
-	}
-
-	// 显示 Bootstrap Toast
-	showErrorToast(title: string, message: string) {
-		const toastElement = document.createElement("div");
-		toastElement.className =
-			"toast align-items-center text-bg-danger border-0 position-fixed bottom-0 end-0 m-3";
-		toastElement.innerHTML = `
-      <div class="d-flex">
-        <div class="toast-body">
-          <strong>${title}</strong>: ${message}
-        </div>
-        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-      </div>
-    `;
-		document.body.appendChild(toastElement);
-
-		const toast = new Toast(toastElement);
-		toast.show();
-
-		// Toast 自动消失后，移除 DOM 元素
-		toastElement.addEventListener("hidden.bs.toast", () => {
-			document.body.removeChild(toastElement);
-		});
 	}
 }
 

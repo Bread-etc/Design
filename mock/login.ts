@@ -17,8 +17,10 @@ const mockLogin: MockMethod = {
 		} else {
 			return {
 				code: 401,
-				msg: "用户名或密码错误",
-				data: null,
+				msg: "参数错误",
+				data: {
+					success: false,
+				},
 			};
 		}
 	},
