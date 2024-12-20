@@ -1,4 +1,3 @@
-// 独立的 Toast 组件
 import { Toast } from "bootstrap";
 
 /**
@@ -12,10 +11,24 @@ export function showToast(
 	message: string,
 	type: "success" | "info" | "warning" | "danger",
 ) {
+	// 确保 Toast 容器存在
+	let toastContainer = document.getElementById("toast-container");
+	if (!toastContainer) {
+		toastContainer = document.createElement("div");
+		toastContainer.id = "toast-container";
+		toastContainer.className = `
+            position-fixed top-0 end-0 p-3
+        `;
+		toastContainer.style.zIndex = "1050"; // 确保 Toast 在最前方
+		document.body.appendChild(toastContainer);
+	}
+
+	// 创建 Toast 元素
 	const toastElement = document.createElement("div");
 	toastElement.className = `
-        toast align-items-center text-bg-${type} border-0 position-fixed bottom-0 end-0 m-0
+        toast align-items-center text-bg-${type} border-0 mb-2
     `;
+	toastElement.style.minWidth = "300px"; // 确保合理的宽度
 	toastElement.innerHTML = `
         <div class="d-flex">
             <div class="toast-body">
@@ -24,13 +37,18 @@ export function showToast(
             <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
         </div>
     `;
-	document.body.appendChild(toastElement);
+	toastContainer.appendChild(toastElement);
 
+	// 显示 Toast
 	const toast = new Toast(toastElement);
 	toast.show();
 
 	// Toast 自动消失后移除
 	toastElement.addEventListener("hidden.bs.toast", () => {
-		document.body.removeChild(toastElement);
+		toastContainer?.removeChild(toastElement);
+		// 如果容器内没有 Toast，则移除容器
+		if (toastContainer?.childElementCount === 0) {
+			document.body.removeChild(toastContainer);
+		}
 	});
 }

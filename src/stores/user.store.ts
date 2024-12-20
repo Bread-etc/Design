@@ -23,7 +23,6 @@ export const useUserStore = defineStore("user", {
 				localStorage.setItem("token", res.accessToken);
 				localStorage.setItem("expiresAt", expiresAt.toString());
 			} catch (err) {
-				console.error("登录失败", err);
 				throw err;
 			}
 		},

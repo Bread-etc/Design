@@ -12,10 +12,13 @@ class AuthService {
 				showToast("登录失败", res.msg, "danger");
 				throw new Error(res.msg);
 			}
-		} catch (error) {
-			showToast("登录失败", "无法连接到服务器，请稍后重试。", "danger");
-			throw error;
+		} catch (err) {
+			throw err;
 		}
+		// } catch (error) {
+		// 	showToast("登录失败", "无法连接到服务器，请稍后重试。", "danger");
+		// 	throw error;
+		// }
 	}
 }
 
