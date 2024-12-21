@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
-import HomeView from "@/views/HomeView.vue";
+import HomeView from "../views/HomeView.vue";
 import LoginView from "../views/LoginView.vue";
+import { showToast } from "@/utils/toast";
 import { useUserStore } from "@/stores/user.store";
 
 const router = createRouter({
@@ -15,7 +16,6 @@ const router = createRouter({
 		{
 			path: "/login",
 			name: "login",
-			// component: () => import("../views/LoginView.vue"),
 			component: LoginView,
 		},
 	],
@@ -23,12 +23,15 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
 	const userStore = useUserStore();
-	const isAuthenticated = userStore.isAuthenticated;
+	const isLogin = userStore.isAuthenticated;
 
-	if (to.meta.requiresAuth && !isAuthenticated) {
-		next({ name: "login" }); // 未登录时跳转到登录界面
+	if (to.meta.requiresAuth && !isLogin) {
+		if (from.name !== "login") {
+			showToast("登录失败", "Token已过期", "danger");
+		}
+		next("/login");
 	} else {
-		next(); // 放行
+		next();
 	}
 });
 

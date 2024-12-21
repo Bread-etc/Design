@@ -5,8 +5,8 @@
 			<h3 class="fw-bold mb-3 user-select-none">物联网实训平台</h3>
 			<p class="text-muted fw-light user-select-none">欢迎来到物联网实训平台登录页面</p>
 
-			<!-- 登录表单 -->
-			<form @submit="handleLogin" style="width: 60%">
+			<!-- 登录表单，此处submit的默认事件刷新页面，需要阻止 -->
+			<form @submit.prevent="handleLogin" style="width: 60%">
 				<div class="form-group mb-3">
 					<label for="account" class="form-label text-muted">账号</label>
 					<input type="account" id="account" class="form-control" v-model="username" required />
@@ -14,7 +14,14 @@
 				<div class="form-group mb-3">
 					<label for="password" class="form-label text-muted">密码</label>
 					<div class="input-group">
-						<input type="password" id="password" class="form-control" v-model="password" required />
+						<input
+							type="password"
+							id="password"
+							class="form-control"
+							v-model="password"
+							required
+							autocomplete="off"
+						/>
 					</div>
 				</div>
 
@@ -61,8 +68,9 @@ const password = ref("");
 const handleLogin = async () => {
 	try {
 		await userStore.login(username.value, password.value);
-		showToast("登录成功", "欢迎回来", "success");
-		router.push("/");
+		showToast("登录成功", `欢迎回来，${username.value}!`, "success");
+		// 登录成功后导航到主页
+		router.push({ name: "home" });
 	} catch (err) {
 		showToast("登录失败", "用户名或密码错误，请重试", "danger");
 	}

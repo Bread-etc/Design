@@ -74,7 +74,7 @@ class Request {
 				return config;
 			},
 			(err: any) => {
-				console.log(err);
+				console.error(err);
 				return Promise.reject(err);
 			},
 		);

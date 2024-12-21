@@ -7,6 +7,7 @@ export const useUserStore = defineStore("user", {
 		token: null,
 		username: "",
 		isAuthenticated: false,
+		expiresAt: null, // 增加 expiresAt 状态字段
 	}),
 
 	actions: {
@@ -17,29 +18,17 @@ export const useUserStore = defineStore("user", {
 				this.token = res.accessToken;
 				this.username = username;
 				this.isAuthenticated = true;
-
-				// 计算过期时间戳并持久化存储
-				const expiresAt = Date.now() + res.expires * 1000; // 当前时间 + 有效时间(ms)
-				localStorage.setItem("token", res.accessToken);
-				localStorage.setItem("expiresAt", expiresAt.toString());
+				this.expiresAt = Date.now() + res.expiresIn * 1000; // 当前时间 + 有效时间(ms)
 			} catch (err) {
 				throw err;
 			}
 		},
 
-		// 加载 token
-		loadToken() {
-			const token = localStorage.getItem("token");
-			const expiresAt = localStorage.getItem("expiresAt");
-
-			if (token && expiresAt) {
-				const nowTime = Date.now();
-				if (nowTime < Number(expiresAt)) {
-					this.token = token;
-					this.isAuthenticated = true;
-				} else {
-					// token 已过期，清除存储的token
-					this.logout();
+		// 验证 Token 是否有效
+		validateToken() {
+			if (this.token && this.expiresAt) {
+				if (Date.now() > this.expiresAt) {
+					this.logout(); // Token 过期自动登出
 				}
 			}
 		},
@@ -49,10 +38,9 @@ export const useUserStore = defineStore("user", {
 			this.token = null;
 			this.username = "";
 			this.isAuthenticated = false;
-
-			// 清空 token
-			localStorage.removeItem("token");
-			localStorage.removeItem("expiresAt");
+			this.expiresAt = null;
 		},
 	},
+	// 启用持久化
+	persist: true,
 });

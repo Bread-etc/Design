@@ -1,5 +1,8 @@
 <template>
-	<div>home page</div>
+	<div>
+		home page
+		<KeepAlive> 123456 </KeepAlive>
+	</div>
 </template>
 
 <script lang="ts" setup></script>
