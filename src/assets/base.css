@@ -1,6 +1,11 @@
 /* 全局变量设置 */
 :root {
 	--color-bg: #fff;
+	/*深蓝主题色 */
+	--color-main: #00457a;
+	--bg-color-nav: #fbfcfe;
+	--bg-color-nav-hover: #e6edf5;
+	--bg-color-dashboard: #fff;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -9,11 +14,10 @@
 	}
 }
 
-body {
-	min-height: 100vh;
-	line-height: 1.6;
-	font-family: "Microsoft YaHei", Arial, Helvetica, sans-serif !important;
+html {
 	font-size: 16px;
+	font-family: "Microsoft YaHei", Arial, Helvetica, sans-serif;
+	min-height: 100vh;
 	text-rendering: optimizeLegibility;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
@@ -27,4 +31,7 @@ body {
 	overflow-wrap: break-word;
 
 	scroll-behavior: smooth;
+}
+
+body {
 }

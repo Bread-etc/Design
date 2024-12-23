@@ -12,6 +12,28 @@ const router = createRouter({
 			name: "home",
 			component: HomeView,
 			meta: { requiresAuth: true },
+			children: [
+				{
+					name: "device",
+					path: "device",
+					component: () => import("../views/subviews/DeviceList.vue"),
+				},
+				{
+					name: "app",
+					path: "app",
+					component: () => import("../views/subviews/IoTapp.vue"),
+				},
+				{
+					name: "scene",
+					path: "scene",
+					component: () => import("../views/subviews/SceneStrategy.vue"),
+				},
+				{
+					name: "setting",
+					path: "setting",
+					component: () => import("../views/subviews/Setting.vue"),
+				},
+			],
 		},
 		{
 			path: "/login",

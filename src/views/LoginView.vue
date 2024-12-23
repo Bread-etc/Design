@@ -2,7 +2,9 @@
 	<div class="d-flex flex-row vh-100">
 		<!-- 左侧表单 -->
 		<div class="bg-white d-flex flex-column justify-content-center align-items-center p-5 w-50">
-			<h3 class="fw-bold mb-3 user-select-none">物联网实训平台</h3>
+			<h3 class="fw-bold mb-3 user-select-none d-flex align-items-center">
+				<IoHardwareChip size="42" class="mt-1 me-2" />物联网实训平台
+			</h3>
 			<p class="text-muted fw-light user-select-none">欢迎来到物联网实训平台登录页面</p>
 
 			<!-- 登录表单，此处submit的默认事件刷新页面，需要阻止 -->
@@ -38,7 +40,7 @@
 		<!-- 右侧图片 -->
 		<div
 			class="user-select-none position-relative d-flex justify-content-center align-items-center w-50 text-white"
-			style="background-color: #0873e2"
+			style="background-color: var(--color-main)"
 		>
 			<img
 				src="../assets/images/LoginPic.svg"
@@ -58,6 +60,7 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useUserStore } from "@/stores/user.store";
 import { showToast } from "@/utils/toast";
+import { IoHardwareChip } from "vue-icons-plus/io";
 
 const userStore = useUserStore();
 const router = useRouter();
