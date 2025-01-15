@@ -20,6 +20,16 @@ const router = createRouter({
 					component: () => import("../views/subviews/DeviceList.vue"),
 				},
 				{
+					name: "manage",
+					path: "manage",
+					component: () => import("../views/subviews/DeviceManage.vue"),
+				},
+				{
+					name: "monitor",
+					path: "monitor",
+					component: () => import("../views/subviews/Monitor.vue"),
+				},
+				{
 					name: "app",
 					path: "app",
 					component: () => import("../views/subviews/IoTapp.vue"),
