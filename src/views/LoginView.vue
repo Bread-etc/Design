@@ -1,7 +1,10 @@
 <template>
 	<div class="d-flex flex-row vh-100">
 		<!-- 左侧表单 -->
-		<div class="bg-white d-flex flex-column justify-content-center align-items-center p-5 w-50">
+		<div
+			class="d-flex flex-column justify-content-center align-items-center p-5 w-50"
+			style="background-color: var(--bg-main)"
+		>
 			<h3 class="fw-bold mb-3 user-select-none d-flex align-items-center">
 				<IoHardwareChip size="42" class="mt-1 me-2" />物联网实训平台
 			</h3>
@@ -29,7 +32,8 @@
 
 				<button
 					type="submit"
-					class="mt-3 btn btn-primary w-100 py-2 fw-bold"
+					class="mt-3 btn btn-primary w-100 py-2 fw-bold border-0"
+					style="background-color: var(--color-main)"
 					:disabled="!username || !password"
 				>
 					登录
@@ -45,6 +49,7 @@
 			<img
 				src="../assets/images/LoginPic.svg"
 				alt="LoginPic"
+				draggable="false"
 				class="p-5 img-fluid"
 				style="max-width: 80%; height: auto"
 			/>

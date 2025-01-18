@@ -2,24 +2,24 @@
 	<div class="d-flex vh-100">
 		<!-- 左侧导航栏 -->
 		<div class="navbar d-flex flex-column p-3">
-			<div class="d-flex w-100 align-items-center ps-2 pe-2 mb-2">
-				<IoCloudOutline size="30" class="me-2" />
-				<span class="fs-5 fw-bold font-monospace user-select-none">Title</span>
+			<div class="d-flex w-100 align-items-center ps-2 pe-2 pb-2 mb-2 border-bottom border-2">
+				<span class="fs-5 fw-bold font-monospace user-select-none">Iot Platform</span>
 			</div>
 
-			<div class="mt-2 mb-2 position-relative">
+			<div class="mt-2 mb-2 position-relative w-100">
 				<IoSearchOutline
 					class="position-absolute"
 					size="22"
-					style="top: 50%; left: 10px; transform: translateY(-50%); color: var(--text-color-nav)"
+					style="top: 50%; left: 10px; transform: translateY(-50%)"
 				/>
 				<input
 					type="text"
 					class="form-control ps-5"
-					placeholder="Quick Filter..."
+					placeholder="快速查找..."
 					v-model="searchQuery"
 				/>
 			</div>
+
 			<nav class="w-100 p-1">
 				<ul class="nav flex-column">
 					<li
@@ -30,7 +30,7 @@
 					>
 						<RouterLink
 							:to="{ name: item.routeName }"
-							class="nav-link text-decoration-none d-flex align-items-center px-3 py-2 rounded-4"
+							class="nav-link w-100 text-decoration-none d-flex align-items-center px-3 py-2 rounded-4"
 							:class="{ active: $route.name === item.routeName }"
 						>
 							<component :is="item.icon" size="20" class="me-2" />
@@ -51,14 +51,24 @@
 						class="d-flex align-items-center justify-content-center"
 						style="cursor: pointer"
 					>
-						<IoChevronForwardOutline size="20" />
+						<IoLogOutOutline size="20" />
 					</div>
 				</div>
 			</div>
+
+			<!-- 使用模态框组件 -->
+			<ModalComponent
+				v-model:visible="isModalVisible"
+				title="是否登出？"
+				size="sm"
+				:onConfirm="handleConfirm"
+			>
+				<p>该操作将会清除用户数据！</p>
+			</ModalComponent>
 		</div>
 
 		<!-- 右侧主要内容 -->
-		<div class="d-flex flex-grow-1 p-4" style="background-color: var(--bg-color-dashboard)">
+		<div class="d-flex flex-grow-1 p-4" style="background-color: var(--bg-main)">
 			<router-view v-slot="{ Component }">
 				<keep-alive>
 					<component :is="Component" />
@@ -70,10 +80,10 @@
 
 <script lang="ts" setup>
 import { useUserStore } from "@/stores/user.store";
-import { useModal } from "@/utils/modal";
 import { ref, computed, shallowRef } from "vue";
+import { useRouter } from "vue-router";
+import ModalComponent from "@/components/ModalComponent.vue";
 import {
-	IoCloudOutline,
 	IoSettingsOutline,
 	IoGridOutline,
 	IoBarChartOutline,
@@ -82,13 +92,15 @@ import {
 	IoConstructOutline,
 	IoPulseOutline,
 	IoPersonCircleOutline,
-	IoChevronForwardOutline,
+	IoLogOutOutline,
 } from "vue-icons-plus/io";
 
 const searchQuery = ref("");
 const useStore = useUserStore();
 const username: string = useStore.username;
-const { showModal } = useModal();
+const router = useRouter();
+
+const isModalVisible = ref(false); // 控制模态框显示
 
 // 导航菜单数据（使用 shallowRef 避免深层响应式）
 const menuItems = shallowRef([
@@ -110,52 +122,50 @@ const filteredMenu = computed(() => {
 	);
 });
 
-// 退出登录逻辑
+// 确认登出逻辑
+const handleConfirm = () => {
+	useStore.logout();
+	router.push({ name: "login" });
+	isModalVisible.value = false;
+};
+
 const logout = () => {
-	console.log(111);
-	showModal({
-		title: "是否登出？",
-		size: "sm",
-		content: "<p>是否确认登出，该操作将会清除用户数据</p>",
-		onConfirm: () => {
-			console.log("logout");
-		},
-	});
+	isModalVisible.value = true;
 };
 </script>
 
-<style scoped lang="scss">
+<style scoped lang="css">
 .navbar {
 	background-color: var(--bg-color-nav);
 	width: 18%;
 	border-top: none;
 	border-bottom: none;
 	border-left: none;
-	border-right: solid 2px #ebebeb;
+	border-right: solid 2px var(--bg-color-nav-hover);
 }
 
 /* 默认文字与图标颜色 */
 .nav-link {
-	color: var(--text-color-nav);
 	transition: all 0.3s ease;
+	color: var(--text-color-nav);
 }
 
 /* 鼠标悬停样式 */
 .nav-link:hover {
 	width: 100%;
 	background-color: var(--bg-color-nav-hover);
-	color: black;
+	color: var(--text-color-nav-hover);
 }
 
 /* 激活状态 */
 .nav-link.active {
 	width: 100%;
-	color: black !important;
+	color: var(--text-color-nav-hover) !important;
 	background-color: var(--bg-color-nav-hover);
 }
 
-/* 图标颜色动态调整 */
+/* 图标颜色动态调整
 .nav-link.active component {
 	color: black;
-}
+} */
 </style>

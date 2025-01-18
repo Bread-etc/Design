@@ -10,3 +10,4 @@
 - 更换`sass`版本至`1.77.6`以消除`dart-css`报错
 - 添加`pinia-plugin-persistedstate`持久化插件，完成`LoginView`页面
 - 添加`toast`、`modal`工具组件
+- 添加浅色、深色模式的切换
