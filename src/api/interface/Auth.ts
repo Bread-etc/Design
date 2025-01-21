@@ -10,10 +10,12 @@ export interface UserState {
 	username: string;
 	isAuthenticated: boolean;
 	expiresAt: number | null;
+	role: string | null;
 }
 
 /* 用户登录返回结果 */
 export interface LoginResult {
 	accessToken: string; // token
 	expiresIn: number; // token 过期时间
+	role: string; // 用户角色
 }

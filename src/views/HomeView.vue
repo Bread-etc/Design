@@ -70,9 +70,11 @@
 		<!-- 右侧主要内容 -->
 		<div class="d-flex flex-grow-1 p-4" style="background-color: var(--bg-main)">
 			<router-view v-slot="{ Component }">
-				<keep-alive>
-					<component :is="Component" />
-				</keep-alive>
+				<transition name="fade" mode="out-in">
+					<keep-alive>
+						<component :is="Component" />
+					</keep-alive>
+				</transition>
 			</router-view>
 		</div>
 	</div>
@@ -112,14 +114,34 @@ const menuItems = shallowRef([
 	{ name: "设置", routeName: "setting", icon: IoSettingsOutline },
 ]);
 
+const menuItemsForStudent = shallowRef([
+	{ name: "设备列表", routeName: "device", icon: IoBarChartOutline },
+	{ name: "设备管理", routeName: "manage", icon: IoConstructOutline },
+	{ name: "数据监控", routeName: "monitor", icon: IoPulseOutline },
+	{ name: "实训应用", routeName: "app", icon: IoGridOutline },
+	{ name: "设置", routeName: "setting", icon: IoSettingsOutline },
+]);
+
+const role: string = useStore.role!;
 // 筛选后的导航菜单
 const filteredMenu = computed(() => {
-	if (!searchQuery.value.trim()) {
-		return menuItems.value;
+	if (role === "admin") {
+		if (!searchQuery.value.trim()) {
+			return menuItems.value;
+		} else {
+			return menuItems.value.filter((item) =>
+				item.name.toLowerCase().includes(searchQuery.value.toLowerCase()),
+			);
+		}
+	} else {
+		if (!searchQuery.value.trim()) {
+			return menuItemsForStudent.value;
+		} else {
+			return menuItemsForStudent.value.filter((item) =>
+				item.name.toLowerCase().includes(searchQuery.value.toLowerCase()),
+			);
+		}
 	}
-	return menuItems.value.filter((item) =>
-		item.name.toLowerCase().includes(searchQuery.value.toLowerCase()),
-	);
 });
 
 // 确认登出逻辑
@@ -164,8 +186,13 @@ const logout = () => {
 	background-color: var(--bg-color-nav-hover);
 }
 
-/* 图标颜色动态调整
-.nav-link.active component {
-	color: black;
-} */
+.fade-enter-active,
+.fade-leave-active {
+	transition: opacity 0.3s ease-in-out;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+	opacity: 0;
+}
 </style>

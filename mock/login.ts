@@ -12,6 +12,17 @@ const mockLogin: MockMethod = {
 				data: {
 					accessToken: "mock_access_token",
 					expiresIn: 7200,
+					role: "admin",
+				},
+			};
+		} else if (body.username === "student" && body.password === "gdut") {
+			return {
+				code: 200,
+				msg: "Login successfully",
+				data: {
+					accessToken: "mock_access_token",
+					expiresIn: 7200,
+					role: "student",
 				},
 			};
 		} else {

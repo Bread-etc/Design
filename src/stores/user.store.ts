@@ -8,6 +8,7 @@ export const useUserStore = defineStore("user", {
 		username: "",
 		isAuthenticated: false,
 		expiresAt: null, // 增加 expiresAt 状态字段
+		role: "",
 	}),
 
 	actions: {
@@ -19,6 +20,7 @@ export const useUserStore = defineStore("user", {
 				this.username = username;
 				this.isAuthenticated = true;
 				this.expiresAt = Date.now() + res.expiresIn * 1000; // 当前时间 + 有效时间(ms)
+				this.role = res.role;
 			} catch (err) {
 				throw err;
 			}
@@ -39,6 +41,7 @@ export const useUserStore = defineStore("user", {
 			this.username = "";
 			this.isAuthenticated = false;
 			this.expiresAt = null;
+			this.role = "";
 		},
 	},
 	// 启用持久化

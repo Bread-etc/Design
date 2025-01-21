@@ -11,3 +11,4 @@
 - 添加`pinia-plugin-persistedstate`持久化插件，完成`LoginView`页面
 - 添加`toast`、`modal`工具组件
 - 添加浅色、深色模式的切换
+- 完成`HomeView`页面，添加`VxeTable`用于表格的显示
