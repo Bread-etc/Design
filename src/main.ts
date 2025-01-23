@@ -12,7 +12,7 @@ import { useUserStore } from "./stores/user.store";
 
 import VxeTable from "vxe-table";
 import "vxe-table/lib/style.css";
-import VxeUI from "vxe-table";
+import VxeUI from "vxe-pc-ui";
 import "vxe-pc-ui/lib/style.css";
 
 const app = createApp(App);

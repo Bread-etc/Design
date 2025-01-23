@@ -1,6 +1,7 @@
 import request from "@/utils/request";
 import type { GetDeviceTypeParams } from "../interface/GetDeviceType";
 
+/* 获取设备类型 */
 class DeviceTypeService {
 	async getDeviceTypeList(params: GetDeviceTypeParams) {
 		try {

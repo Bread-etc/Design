@@ -37,4 +37,4 @@ const mockLogin: MockMethod = {
 	},
 };
 
-export default [mockLogin];
+export default mockLogin;

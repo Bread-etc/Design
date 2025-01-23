@@ -47,6 +47,9 @@ importers:
       vue-router:
         specifier: ^4.4.5
         version: 4.5.0(vue@3.5.13(typescript@5.6.3))
+      vxe-pc-ui:
+        specifier: ^4.3.78
+        version: 4.3.78(vue@3.5.13(typescript@5.6.3))
       vxe-table:
         specifier: ^4.10.5
         version: 4.10.5(vue@3.5.13(typescript@5.6.3))
@@ -1763,8 +1766,8 @@ packages:
       typescript:
         optional: true
 
-  vxe-pc-ui@4.3.76:
-    resolution: {integrity: sha512-GQkQHc/rMK1pnD4FQWZY3Xxd/sKH35d2GPJ9bQOowXFwYt7nsEgU2bSMZcg5Lpp7guTvsDGqG3TuMUvfNm543g==}
+  vxe-pc-ui@4.3.78:
+    resolution: {integrity: sha512-7Fho4+M+gR3fnHIE96UVp/yoYdoqEDJ5peK3eVlqF8hzgGsHiZO8SHvbXc3+ZMVoqpT3uI6U/yckj+k2BHogKA==}
 
   vxe-table@4.10.5:
     resolution: {integrity: sha512-X04AwhfZLaBy1gSiCsVd0EPurIaFwOOna9XzojF0eUr2c6rYF8u9IrhP+vSBmOj+yDiAENf8QjXFyLgNU3NTTg==}
@@ -3449,7 +3452,7 @@ snapshots:
     optionalDependencies:
       typescript: 5.6.3
 
-  vxe-pc-ui@4.3.76(vue@3.5.13(typescript@5.6.3)):
+  vxe-pc-ui@4.3.78(vue@3.5.13(typescript@5.6.3)):
     dependencies:
       '@vxe-ui/core': 4.0.29(vue@3.5.13(typescript@5.6.3))
     transitivePeerDependencies:
@@ -3457,7 +3460,7 @@ snapshots:
 
   vxe-table@4.10.5(vue@3.5.13(typescript@5.6.3)):
     dependencies:
-      vxe-pc-ui: 4.3.76(vue@3.5.13(typescript@5.6.3))
+      vxe-pc-ui: 4.3.78(vue@3.5.13(typescript@5.6.3))
     transitivePeerDependencies:
       - vue
 

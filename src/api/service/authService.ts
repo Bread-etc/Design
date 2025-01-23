@@ -1,5 +1,6 @@
 import request from "@/utils/request";
 
+/* 用户逻辑服务 */
 class AuthService {
 	async login(username: string, password: string) {
 		try {

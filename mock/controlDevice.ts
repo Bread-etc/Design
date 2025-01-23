@@ -1,5 +1,6 @@
 import { MockMethod } from "vite-plugin-mock";
-import Mock, { Random } from "mockjs";
+import Mock from "mockjs";
+const { Random } = Mock;
 
 type bodyType = {
 	accessToken: string;
@@ -71,4 +72,4 @@ const mockControlDevice: MockMethod = {
 	},
 };
 
-export default [mockControlDevice];
+export default mockControlDevice;

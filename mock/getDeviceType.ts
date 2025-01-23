@@ -1,5 +1,6 @@
 import { MockMethod } from "vite-plugin-mock";
 import Mock from "mockjs";
+const { Random } = Mock;
 
 type bodyType = {
 	accessToken: string;
@@ -81,4 +82,4 @@ const mockGetDeviceType: MockMethod = {
 	},
 };
 
-export default [mockGetDeviceType];
+export default mockGetDeviceType;
