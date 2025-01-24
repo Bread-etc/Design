@@ -2,7 +2,7 @@ import { MockMethod } from "vite-plugin-mock";
 
 const mockLogin: MockMethod = {
 	// /api/v1/accessToken
-	url: "/api/v1/login",
+	url: "/iotp/api/v1/login",
 	method: "post",
 	response: ({ body }) => {
 		if (body.username === "admin" && body.password === "admin") {
@@ -27,11 +27,9 @@ const mockLogin: MockMethod = {
 			};
 		} else {
 			return {
-				code: 401,
-				msg: "用户名或密码错误",
-				data: {
-					success: false,
-				},
+				code: 1000,
+				errmsg: "用户名或密码错误",
+				data: {},
 			};
 		}
 	},

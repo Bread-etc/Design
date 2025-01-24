@@ -21,7 +21,7 @@ type bodyType = {
 
 const r = Random;
 const mockGetDeviceList: MockMethod = {
-	url: "/api/open/deviceManagement/hardware/list",
+	url: "/iotp/api/open/deviceManagement/hardware/list",
 	method: "post",
 	response: (body: any) => {
 		const res: bodyType = body.body;
@@ -80,9 +80,9 @@ const mockGetDeviceList: MockMethod = {
 			};
 		} else {
 			return {
-				code: 401,
-				msg: "无效的 accessToken",
-				data: [],
+				code: 1000,
+				errmsg: "无效的 accessToken",
+				data: {},
 			};
 		}
 	},

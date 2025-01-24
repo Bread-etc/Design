@@ -13,10 +13,10 @@ type bodyType = {
 	};
 };
 
-/* 用于获取加工任务列表 */
+/* 用于获取加工任务和数据列表 */
 const r = Random;
 const mockGetProcessTaskList: MockMethod = {
-	url: "/api/open/dataAnalysis/processingTask/list",
+	url: "/iotp/api/open/dataAnalysis/processingTask/list",
 	method: "post",
 	response: (body: any) => {
 		const res: bodyType = body.body;
@@ -58,9 +58,9 @@ const mockGetProcessTaskList: MockMethod = {
 			return mockData;
 		} else {
 			return {
-				code: 401,
-				msg: "无效的 accessToken",
-				data: [],
+				code: 1000,
+				errmsg: "无效的 accessToken",
+				data: {},
 			};
 		}
 	},

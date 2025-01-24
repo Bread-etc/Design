@@ -17,7 +17,7 @@ type bodyType = {
 /* 用于提供用户需要设备的原始数据，生成个性化的统计图、趋势图等 */
 const r = Random;
 const mockRawdataDeviceList: MockMethod = {
-	url: "/api/open/dataAnalysis/rawData/device/list",
+	url: "/iotp/api/open/dataAnalysis/rawData/device/list",
 	method: "post",
 	response: (body: any) => {
 		const res: bodyType = body.body;
@@ -65,9 +65,9 @@ const mockRawdataDeviceList: MockMethod = {
 			};
 		} else {
 			return {
-				code: 401,
-				msg: "无效的 accessToken",
-				data: [],
+				code: 1000,
+				errmsg: "无效的 accessToken",
+				data: {},
 			};
 		}
 	},

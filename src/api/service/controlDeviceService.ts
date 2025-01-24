@@ -5,7 +5,7 @@ import type { ControlDeviceParams } from "../interface/ControlDevice";
 class ControlDeviceService {
 	async controlDevice(params: ControlDeviceParams) {
 		try {
-			const res = await request.post("/api/open/deviceManagement/device/control", params);
+			const res = await request.post("/iotp/api/open/deviceManagement/device/control", params);
 			if (res.code === 0) {
 				return res.data;
 			} else {

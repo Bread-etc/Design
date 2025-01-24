@@ -5,7 +5,7 @@ import type { GetDeviceTypeParams } from "../interface/GetDeviceType";
 class DeviceTypeService {
 	async getDeviceTypeList(params: GetDeviceTypeParams) {
 		try {
-			const res = await request.post("/api/open/deviceManagement/device/type/list", params);
+			const res = await request.post("/iotp/api/open/deviceManagement/device/type/list", params);
 			if (res.code === 0) {
 				return res.data;
 			} else {
