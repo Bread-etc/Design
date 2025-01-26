@@ -13,22 +13,31 @@ const mockOpenGetAccessToken: MockMethod = {
 	method: "post",
 	response: (body: any) => {
 		const res: bodyType = body.body;
-		const mockData = Mock.mock({
-			"data|1-5": [
-				{
-					appTypeID: r.string("lower", 10, 16),
-					appTypeName: r.cword(4),
-					appID: r.increment(),
-					appName: r.cword(4),
-					accessToken: r.string("lower", 10, 16),
-					expireIn: 7200,
-				},
-			],
-		});
-
-		return {
-			code: 0,
-			mockData,
-		};
+		if (res.secret) {
+			const mockData = Mock.mock({
+				"data|1-5": [
+					{
+						appTypeID: r.string("lower", 10, 16),
+						appTypeName: r.cword(4),
+						appID: r.increment(),
+						appName: r.cword(4),
+						accessToken: r.string("lower", 10, 16),
+						expireIn: 7200,
+					},
+				],
+			});
+			return {
+				code: 0,
+				mockData,
+			};
+		} else {
+			return {
+				code: 2003,
+				errMsg: "secret错误",
+				data: {},
+			};
+		}
 	},
 };
+
+export default mockOpenGetAccessToken;
