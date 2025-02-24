@@ -13,3 +13,5 @@
 - 添加浅色、深色模式的切换
 - 完成`HomeView`页面，添加`VxeTable`用于表格的显示
 - 增加更多`mock`接口
+- 完成`dataAnalysis-mock`下的接口模拟
+- 加入`VxeUi`适配深色模式

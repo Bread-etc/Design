@@ -4,7 +4,7 @@ const { Random } = Mock;
 
 type bodyType = {
 	accessToken: string;
-	dataTypeID: string[];
+	dataTypeIDs: string[];
 	filter: {
 		taskID: number;
 		dataSourceID: number;

@@ -29,14 +29,17 @@ const mockRawDataHardwareList: MockMethod = {
 	response: (body: any) => {
 		const res: bodyType = body.body;
 		if (res.accessToken) {
+			// 递增从 1 开始
+			let dataID = 1;
+
 			const mockData = Mock.mock({
 				data: {
 					positioning: {
 						left: r.integer(0, 30),
 					},
-					"results|1-3": [
+					"results|8-15": [
 						{
-							dataID: r.integer(0, 10),
+							dataID: () => dataID++,
 							hardwareTypeID: res.filter.hardwareTypeID,
 							hardwareID: res.filter.hardwareIDs[0],
 							time: r.datetime("yyyy-MM-dd HH:mm:ss"),
@@ -51,7 +54,7 @@ const mockRawDataHardwareList: MockMethod = {
 
 			return {
 				code: 0,
-				mockData,
+				data: mockData,
 			};
 		} else {
 			return {

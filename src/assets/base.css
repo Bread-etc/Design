@@ -12,6 +12,7 @@
 	--text-color-nav-hover: #000;
 
 	/* 内容栏颜色 */
+	--bg-card: #e9ecf1;
 }
 
 [data-bs-theme="dark"] {
@@ -26,6 +27,9 @@
 	--bg-color-nav-hover: #2f2f2f;
 	--text-color-nav: #818181;
 	--text-color-nav-hover: #fff;
+
+	/* 内容栏颜色 */
+	--bg-card: #242424;
 }
 
 html {

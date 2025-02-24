@@ -1,9 +1,9 @@
 import request from "@/utils/request";
-import type { GetProcessTaskListParams } from "../interface/GetProcessTaskList";
+import type { ProcessingTaskListParams } from "@/api/interface/monitor/ProcessingTaskList";
 
-/* 获取任务列表 */
+/* 获取加工列表 */
 class ProcessTaskListService {
-	async getProcessTaskList(params: GetProcessTaskListParams) {
+	async processingTaskList(params: ProcessingTaskListParams) {
 		try {
 			const res = await request.post("/iotp/api/open/dataAnalysis/processingTask/list", params);
 			if (res.code === 0) {
