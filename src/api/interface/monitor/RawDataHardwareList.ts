@@ -12,9 +12,9 @@ export interface RawDataHardwareListParams {
 		timeEnd: string;
 	};
 	positioning: {
-		maxID: number;
-		sinceID: number;
-		count: number;
+		maxID: number | null;
+		sinceID: number | null;
+		count: number | null;
 	};
 }
 

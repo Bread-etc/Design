@@ -2,6 +2,7 @@ import { MockMethod } from "vite-plugin-mock";
 import Mock from "mockjs";
 const { Random } = Mock;
 
+// 请求体结构
 type bodyType = {
 	accessToken: string;
 	filter: {
@@ -15,38 +16,66 @@ type bodyType = {
 		timeEnd: string;
 	};
 	positioning: {
-		maxID: number;
-		sinceID: number;
-		count: number;
+		maxID: number | null;
+		sinceID: number | null;
+		count: number | null;
 	};
 };
 
+// 定义 StatePower 和 StateValue 结构
+interface StatePower {
+	POWERS_1: string;
+	VOLTAGE_1: number;
+}
+
+interface StateValue {
+	stateID: string;
+	value: number;
+}
+
 /* 获取硬件数据列表 */
-const r = Random;
 const mockRawDataHardwareList: MockMethod = {
 	url: "/iotp/api/open/dataAnalysis/rawData/hardware/list",
 	method: "post",
 	response: (body: any) => {
 		const res: bodyType = body.body;
 		if (res.accessToken) {
-			// 递增从 1 开始
 			let dataID = 1;
 
 			const mockData = Mock.mock({
 				data: {
 					positioning: {
-						left: r.integer(0, 30),
+						left: Random.integer(0, 30),
 					},
 					"results|8-15": [
-						{
-							dataID: () => dataID++,
-							hardwareTypeID: res.filter.hardwareTypeID,
-							hardwareID: res.filter.hardwareIDs[0],
-							time: r.datetime("yyyy-MM-dd HH:mm:ss"),
-							states: {
-								stateID: r.string("upper", 10) + "_1",
-								value: r.integer(220, 330),
-							},
+						() => {
+							const hardwareTypeID =
+								res.filter.hardwareTypeID || "HARDWARE_" + Random.string("lower", 6);
+							const hardwareID = res.filter.hardwareIDs[0] || `GBK${Random.integer(1000, 9999)}`;
+							const time = Random.datetime("yyyy-MM-dd HH:mm:ss");
+
+							// 随机决定 `states` 是对象（StatePower）还是数组（StateValue[]）
+							const isStateArray = Random.boolean();
+
+							const states: StatePower | StateValue[] = isStateArray
+								? // 生成多个 `StateValue`
+									Array.from({ length: Random.integer(1, 4) }).map(() => ({
+										stateID: Random.string("upper", 8),
+										value: Random.integer(200, 350),
+									}))
+								: // 生成 `StatePower`
+									{
+										POWERS_1: Random.string("upper", 6),
+										VOLTAGE_1: Random.integer(200, 350),
+									};
+
+							return {
+								dataID: dataID++,
+								hardwareTypeID,
+								hardwareID,
+								time,
+								states,
+							};
 						},
 					],
 				},
