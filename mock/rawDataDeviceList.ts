@@ -15,41 +15,52 @@ type bodyType = {
 		timeEnd: string;
 	};
 	positioning: {
-		maxID: number;
-		sinceID: number;
-		count: number;
+		maxID: number | null;
+		sinceID: number | null;
+		count: number | null;
 	};
 };
 
+interface StateValue {
+	stateID: string;
+	value: number;
+}
+
 /* 获取设备数据列表 */
-const r = Random;
 const mockRawDataDeviceList: MockMethod = {
 	url: "/iotp/api/open/dataAnalysis/rawData/device/list",
 	method: "post",
 	response: (body: any) => {
 		const res: bodyType = body.body;
 		if (res.accessToken) {
+			let dataID = 1;
+
 			const mockData = Mock.mock({
 				data: {
 					positioning: {
-						left: r.integer(0, 30),
+						left: Random.integer(0, 30),
 					},
-					"results|1-3": [
-						{
-							dataID: r.integer(0, 10),
-							deviceTypeID: res.filter.deviceTypeID,
-							deviceID: res.filter.deviceIDs[0],
-							time: r.datetime("yyyy-MM-dd HH:mm:ss"),
-							states: [
-								{
-									stateID: "POWERS_1",
-									value: r.integer(220, 330),
-								},
-								{
-									stateID: "VOLTAGE_1",
-									value: r.integer(220, 330),
-								},
-							],
+					"results|8-18": [
+						() => {
+							const deviceTypeID =
+								res.filter.deviceTypeID || "DEVICE_" + Random.string("lower", 30);
+							const deviceID =
+								res.filter.deviceIDs[0] || "VT" + Random.integer(1000000000, 9999999999);
+							const time = Random.datetime("yyyy-MM-dd HH:mm:ss");
+
+							// 生成多个 StateValue
+							const states: StateValue[] = Array.from({ length: Random.integer(1, 4) }).map(() => ({
+								stateID: Random.string("upper", 8) + "_1",
+								value: Random.integer(200, 350),
+							}));
+
+							return {
+								dataID: dataID++,
+								deviceTypeID,
+								deviceID,
+								time,
+								states,
+							};
 						},
 					],
 				},
@@ -57,7 +68,7 @@ const mockRawDataDeviceList: MockMethod = {
 
 			return {
 				code: 0,
-				mockData,
+				data: mockData,
 			};
 		} else {
 			return {

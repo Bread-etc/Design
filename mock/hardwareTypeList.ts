@@ -14,7 +14,7 @@ type bodyType = {
 	};
 };
 
-/* 获取硬件类型列表 */
+/* 公共接口 - 获取硬件类型列表 */
 const r = Random;
 const mockHardwareTypeList: MockMethod = {
 	url: "/iotp/api/open/deviceManagement/hardware/type/list",

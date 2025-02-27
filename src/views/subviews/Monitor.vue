@@ -1,11 +1,19 @@
 <template>
 	<div class="p-2 w-100">
-		<h4 class="fw-bold pb-3 mb-3 border-bottom border-2">数据监控</h4>
+		<h4 class="fw-bold pb-3 mb-3 border-bottom border-2 d-flex justify-content-between">
+			数据监控
+			<vxe-switch
+				v-model="analysisMode"
+				open-label="设备"
+				close-label="硬件"
+				style="transform: scale(1.2); transform-origin: center"
+			></vxe-switch>
+		</h4>
 
 		<!-- 筛选框部分 -->
 		<div class="d-flex flex-column my-3 p-1">
 			<!-- 第一行：硬件类型、硬件ID、硬件名称 -->
-			<div class="d-flex align-items-center gap-3">
+			<div class="d-flex align-items-center gap-3" v-if="!analysisMode">
 				<!-- 硬件类型 -->
 				<select id="hardwareType" class="form-select" v-model="filter.hardwareTypeID">
 					<option value="">请选择硬件类型</option>
@@ -31,20 +39,41 @@
 				/>
 			</div>
 
+			<!-- 第一行：设备类型、设备ID、设备名称 -->
+			<div class="d-flex align-items-center gap-3" v-if="analysisMode">
+				<!-- 设备类型 -->
+				<select id="deviceType" class="form-select" v-model="filterForDevice.deviceTypeID">
+					<option value="">请选择设备类型</option>
+					<option value="HardwareType_1">设备类型1</option>
+					<option value="HardwareType_2">设备类型2</option>
+				</select>
+
+				<!-- 设备ID -->
+				<select id="deviceID" class="form-select" v-model="deviceID">
+					<option value="">请选择设备ID</option>
+					<option value="VT*">VT*</option>
+					<option value="VT157481230">VT157481230</option>
+				</select>
+
+				<!-- 设备名称 -->
+				<input
+					type="text"
+					id="deviceName"
+					class="form-control flex-grow-1"
+					v-model="deviceName"
+					placeholder="输入设备名称"
+				/>
+			</div>
+
 			<!-- 第二行：时间选择 -->
 			<div class="d-flex align-items-center gap-3 mt-3">
 				<!-- 开始时间 -->
 				<label class="text-nowrap pe-1">开始时间:</label>
-				<input
-					type="datetime-local"
-					id="timeStart"
-					class="form-control"
-					v-model="filter.timeStart"
-				/>
+				<input type="datetime-local" id="timeStart" class="form-control" v-model="timeStart" />
 
 				<!-- 结束时间 -->
 				<label class="text-nowrap pe-1">结束时间:</label>
-				<input type="datetime-local" id="timeEnd" class="form-control" v-model="filter.timeEnd" />
+				<input type="datetime-local" id="timeEnd" class="form-control" v-model="timeEnd" />
 
 				<div class="d-flex align-items-center">
 					<button
@@ -59,7 +88,7 @@
 			</div>
 		</div>
 
-		<div class="dataCard p-4 rounded-4">
+		<div class="dataCard p-4 rounded-4" v-show="!analysisMode">
 			<div class="d-flex justify-content-between align-items-center w-100 pb-2">
 				<h5 class="fw-bold">硬件数据</h5>
 				<p class="text-muted">总计 {{ hardwareData.length }}</p>
@@ -73,7 +102,31 @@
 
 				<vxe-column field="state" title="硬件状态" width="150" align="center" size="medium">
 					<template #default="{ row }">
-						<vxe-button mode="text" @click="openStateDetail(row)"> 点击查看详情 </vxe-button>
+						<vxe-button mode="text" @click="openStateDetailForHardware(row)">
+							点击查看详情
+						</vxe-button>
+					</template>
+				</vxe-column>
+			</vxe-table>
+		</div>
+
+		<div class="dataCard p-4 rounded-4" v-show="analysisMode">
+			<div class="d-flex justify-content-between align-items-center w-100 pb-2">
+				<h5 class="fw-bold">设备数据</h5>
+				<p class="text-muted">总计 {{ deviceData.length }}</p>
+			</div>
+
+			<vxe-table border height="350" :data="deviceData">
+				<vxe-column field="dataID" title="ID" width="50" align="center"></vxe-column>
+				<vxe-column field="deviceTypeID" title="设备类型"></vxe-column>
+				<vxe-column field="deviceID" title="设备 ID"></vxe-column>
+				<vxe-column field="time" title="时间" width="200"></vxe-column>
+
+				<vxe-column field="state" title="设备状态" width="150" align="center" size="medium">
+					<template #default="{ row }">
+						<vxe-button mode="text" @click="openStateDetailForDevice(row)">
+							点击查看详情
+						</vxe-button>
 					</template>
 				</vxe-column>
 			</vxe-table>
@@ -88,6 +141,8 @@ import { useUserStore } from "@/stores/user.store";
 import type { RawDataHardwareListParams } from "@/api/interface/monitor/RawDataHardwareList";
 import rawDataHardwareListService from "@/api/service/monitor/rawDataHardwareListService";
 import { VxeUI } from "vxe-pc-ui";
+import type { RawDataDeviceListParams } from "@/api/interface/monitor/RawDataDeviceList";
+import rawDataDeviceListService from "@/api/service/monitor/rawDataDeviceListService";
 
 /* 定义类型 */
 interface StatePower {
@@ -108,9 +163,22 @@ interface RowOne {
 	state: StatePower | StateValue[];
 }
 
+interface RowTwo {
+	dataID: number;
+	deviceTypeID: string;
+	deviceID: string;
+	time: string;
+	state: StateValue[];
+}
+
+const analysisMode = ref(false);
 const accessToken = useUserStore().token;
 const hardwareID = ref<string>("");
 const hardwareName = ref<string>("");
+const deviceID = ref<string>("");
+const deviceName = ref<string>("");
+const timeStart = ref<string>("");
+const timeEnd = ref<string>("");
 const filter = computed(() => ({
 	hardwareTypeID: "",
 	hardwareIDs: [hardwareID.value], // 变成 computed 后，每次 hardwareID.value 变化都会更新
@@ -118,13 +186,24 @@ const filter = computed(() => ({
 	spaceIDs: [],
 	spaceNames: [""],
 	spaceRecursive: true,
-	timeStart: "",
-	timeEnd: "",
+	timeStart: timeStart.value,
+	timeEnd: timeEnd.value,
+}));
+const filterForDevice = computed(() => ({
+	deviceTypeID: "",
+	deviceIDs: [deviceID.value],
+	deviceNames: [deviceName.value],
+	spaceIDs: [],
+	spaceNames: [""],
+	spaceRecursive: true,
+	timeStart: timeStart.value,
+	timeEnd: timeEnd.value,
 }));
 const hardwareData = ref<RowOne[]>([]);
+const deviceData = ref<RowTwo[]>([]);
 
 /* 表格详细信息展示 */
-const openStateDetail = (row: RowOne) => {
+const openStateDetailForHardware = (row: RowOne) => {
 	let content = "";
 
 	if (Array.isArray(row.state)) {
@@ -143,18 +222,46 @@ const openStateDetail = (row: RowOne) => {
 	});
 };
 
+const openStateDetailForDevice = (row: RowTwo) => {
+	let content = "";
+
+	if (Array.isArray(row.state)) {
+		content = row.state.map((s) => `设备状态 ID: ${s.stateID}，状态值: ${s.value}`).join("\n");
+	} else {
+		content = "未知的状态类型";
+	}
+
+	VxeUI.modal.open({
+		title: "状态详情",
+		content: content || "无设备状态",
+	});
+};
+
 /* 搜索事件 */
 const handleSearch = () => {
-	let params: RawDataHardwareListParams = {
-		accessToken: accessToken as string,
-		filter: filter.value,
-		positioning: {
-			maxID: null,
-			sinceID: null,
-			count: null,
-		},
-	};
-	handleHardwareList(params);
+	if (!analysisMode) {
+		let params: RawDataHardwareListParams = {
+			accessToken: accessToken as string,
+			filter: filter.value,
+			positioning: {
+				maxID: null,
+				sinceID: null,
+				count: null,
+			},
+		};
+		handleHardwareList(params);
+	} else {
+		let params: RawDataDeviceListParams = {
+			accessToken: accessToken as string,
+			filter: filterForDevice.value,
+			positioning: {
+				maxID: null,
+				sinceID: null,
+				count: null,
+			},
+		};
+		handleDeviceList(params);
+	}
 };
 
 /* 网络请求事件 */
@@ -177,6 +284,25 @@ const handleHardwareList = async (params: RawDataHardwareListParams) => {
 	}
 };
 
+const handleDeviceList = async (params: RawDataDeviceListParams) => {
+	try {
+		const res = await rawDataDeviceListService.rawDataDeviceList(params);
+
+		if (res.data.results) {
+			// 处理返回的数据，格式化为表格所需格式
+			deviceData.value = res.data.results.map((item: any) => ({
+				dataID: item.dataID,
+				deviceTypeID: item.deviceTypeID,
+				deviceID: item.deviceID,
+				time: item.time,
+				state: item.states,
+			}));
+		}
+	} catch (error) {
+		console.error(error);
+	}
+};
+
 /* 初始化网络请求事件 */
 onMounted(() => {
 	handleHardwareList({
@@ -185,6 +311,25 @@ onMounted(() => {
 			hardwareTypeID: "",
 			hardwareIDs: [""],
 			hardwareNames: [""],
+			spaceIDs: [],
+			spaceNames: [""],
+			spaceRecursive: true,
+			timeStart: "",
+			timeEnd: "",
+		},
+		positioning: {
+			maxID: 1,
+			sinceID: 1,
+			count: 1,
+		},
+	});
+
+	handleDeviceList({
+		accessToken: accessToken!,
+		filter: {
+			deviceTypeID: "",
+			deviceIDs: [""],
+			deviceNames: [""],
 			spaceIDs: [],
 			spaceNames: [""],
 			spaceRecursive: true,
