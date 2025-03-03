@@ -9,58 +9,59 @@ type bodyType = {
 		all: boolean;
 		hardwareTypeIDs: string[];
 		hardwareTypeName: string[];
-		labelName: string[];
+		labelNames: string[];
 		manufactoryTypes: string[];
 	};
 };
 
 /* 公共接口 - 获取硬件类型列表 */
-const r = Random;
 const mockHardwareTypeList: MockMethod = {
 	url: "/iotp/api/open/deviceManagement/hardware/type/list",
 	method: "post",
 	response: (body: any) => {
 		const res: bodyType = body.body;
 		if (res.accessToken) {
+			let typeID = 1;
+
 			const mockData = Mock.mock({
-				"data|1-3": [
+				data: [
 					{
-						hardwareTypeID: r.string("lower", 30),
+						hardwareTypeID: "HARDWARE_" + typeID,
 						info: {
-							hardwareTypeName: r.cword(2, 6),
-							icon: r.image("200x100", "#4A7BF7", "Hardware"),
-							description: r.csentence(1, 3),
-							model: r.string("upper", 10),
-							manufactory: r.cword(2, 4),
-							accessway: r.string(2, 4),
-							pwoerSupplyMode: r.integer(200, 220) + "V",
-							label: [r.pick(["label1", "label2", "label3"])],
+							hardwareTypeName: Random.cword(2, 4),
+							icon: Random.image("200x100", "#4A7BF7", "Hardware"),
+							description: Random.csentence(1, 3),
+							model: Random.string("upper", 10),
+							manufactory: "信锐",
+							accessway: "LoRa",
+							powerSupplyMode: "AC220V",
+							labelNames: ["开关", "插座"],
 						},
-						"states|1-5": [
+						"states|1-3": [
 							{
-								stateID: r.string("upper", 5, 15),
-								stateName: r.cword(2, 4),
-								unit: r.pick(["w", "watt", "kv", "v", "A"]),
-								valueType: r.pick(["int", "float", "double"]),
+								stateID: "DEV_" + Random.string("upper", 6),
+								stateName: Random.pick(["功率", "电流", "开关状态", "MAC地址"]),
+								unit: Random.pick(["w", "A", "V"]),
+								valueType: Random.pick(["int", "float", "enum", "string"]),
 								valueRange: [
 									{
-										min: r.integer(0, 10),
-										max: r.integer(10, 1000),
+										min: 0,
+										max: Random.integer(1000, 9999),
 									},
 								],
-								controllable: r.pick([true, false]),
+								controllable: Random.boolean(),
 							},
 						],
-						"configs|1-2": [
+						"configs|1-3": [
 							{
-								configID: r.string("upper", 5, 15),
-								configName: r.cword(4, 6),
-								valueType: r.pick(["enum", "int", "float"]),
+								configID: "DEV_" + Random.string("upper", 10),
+								configName: Random.cword(2, 4),
+								valueType: Random.pick(["int", "float", "enum", "string"]),
 								valueRange: {
 									"0": "关闭",
 									"1": "打开",
 								},
-								controllable: true,
+								controllable: Random.boolean(),
 							},
 						],
 					},
@@ -69,7 +70,7 @@ const mockHardwareTypeList: MockMethod = {
 
 			return {
 				code: 0,
-				mockData,
+				data: mockData,
 			};
 		} else {
 			return {

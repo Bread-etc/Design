@@ -1,9 +1,9 @@
 import request from "@/utils/request";
-import type { GetDeviceListParams } from "../interface/GetDeviceList";
+import type { DeviceListParams } from "../interface/DeviceList";
 
-/* 获取设备列表 */
+/* 公共接口 - 获取设备列表 */
 class DeviceListService {
-	async getDeviceList(params: GetDeviceListParams) {
+	async deviceList(params: DeviceListParams) {
 		try {
 			const res = await request.post("/iotp/api/open/deviceManagement/device/list", params);
 			if (res.code === 0) {

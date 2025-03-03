@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { GetDeviceTypeParams } from "@/api/interface/GetDeviceType";
+import type { GetDeviceTypeParams } from "@/api/interface/DeviceTypeList";
 import getDeviceTypeService from "@/api/service/deviceTypeService";
 import { useUserStore } from "@/stores/user.store";
 import { onMounted } from "vue";

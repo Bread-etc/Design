@@ -1,5 +1,5 @@
+import type { ProcessedDataDeviceParams } from "@/api/interface/monitor/ProcessedDataDevice";
 import request from "@/utils/request";
-import type { ProcessedDataDeviceParams } from "@/api/interface/monitor/processedDataDevice";
 
 /* 获取设备加工数据列表 */
 class ProcessedDataDeviceService {

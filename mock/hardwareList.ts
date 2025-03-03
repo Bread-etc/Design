@@ -20,11 +20,11 @@ type bodyType = {
 	order: {
 		field: string;
 		key: string;
-		orderBy: string;
+		orderBy: "asc" | "desc";
 	};
 	paging: {
-		offset: number;
-		size: number;
+		offset: number | null;
+		size: number | null;
 	};
 };
 
@@ -50,8 +50,8 @@ const mockHardwareList: MockMethod = {
 							hardwareTypeName: r.cword(4, 6),
 							hardwareStatus: r.pick(["online", "offline"]),
 							statusDescription: r.pick(["在线", "离线"]),
-							softwareVersion: r.id(),
-							hardwareVersion: r.id(),
+							softwareVersion: "VERSION_" + r.string("upper", 4),
+							hardwareVersion: "HARDWARE_VERSION_" + r.string("upper", 4),
 							onlineDuration: r.integer(100000, 1000000),
 							onlineTime: r.datetime("yyyy-MM-dd HH:mm:ss"),
 							reportDuration: r.integer(100000, 1000000),
