@@ -1,5 +1,5 @@
 import request from "@/utils/request";
-import type { DeviceTypeListParams } from "../interface/DeviceTypeList";
+import type { DeviceTypeListParams, DeviceTypeListResult } from "../interface/DeviceTypeList";
 
 /* 公共接口 - 获取设备类型列表 */
 class DeviceTypeListService {
@@ -7,7 +7,7 @@ class DeviceTypeListService {
 		try {
 			const res = await request.post("/iotp/api/open/deviceManagement/device/type/list", params);
 			if (res.code === 0) {
-				return res.data;
+				return res.data as DeviceTypeListResult;
 			} else {
 				throw new Error(res.msg);
 			}

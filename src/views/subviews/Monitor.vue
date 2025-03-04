@@ -17,16 +17,18 @@
 				<!-- 硬件类型 -->
 				<select id="hardwareType" class="form-select" v-model="filter.hardwareTypeID">
 					<option value="">请选择硬件类型</option>
-					<option value="HardwareType_1">硬件类型1</option>
-					<option value="HardwareType_2">硬件类型2</option>
+					<option v-for="item in hardwareTypes" :key="item.id" :value="item.id">
+						{{ item.name }}
+					</option>
 				</select>
 
 				<!-- 硬件ID -->
 				<select id="hardwareIDs" class="form-select" v-model="hardwareID">
 					<!-- 将value设置为一个空数组，与filter.hardwareID的类型保持一致 -->
 					<option value="">请选择硬件ID</option>
-					<option value="GAK">GAK</option>
-					<option value="GBK0000001">GBK0000001</option>
+					<option v-for="item in hardwareIDs" :key="item.id" :value="item.name">
+						{{ item.name }}
+					</option>
 				</select>
 
 				<!-- 硬件名称 -->
@@ -44,15 +46,17 @@
 				<!-- 设备类型 -->
 				<select id="deviceType" class="form-select" v-model="filterForDevice.deviceTypeID">
 					<option value="">请选择设备类型</option>
-					<option value="HardwareType_1">设备类型1</option>
-					<option value="HardwareType_2">设备类型2</option>
+					<option v-for="item in deviceTypes" :key="item.id" :value="item.id">
+						{{ item.name }}
+					</option>
 				</select>
 
 				<!-- 设备ID -->
 				<select id="deviceID" class="form-select" v-model="deviceID">
 					<option value="">请选择设备ID</option>
-					<option value="VT*">VT*</option>
-					<option value="VT157481230">VT157481230</option>
+					<option v-for="item in deviceIDs" :key="item.id" :value="item.id">
+						{{ item.name }}
+					</option>
 				</select>
 
 				<!-- 设备名称 -->
@@ -143,6 +147,7 @@ import rawDataHardwareListService from "@/api/service/monitor/rawDataHardwareLis
 import { VxeUI } from "vxe-pc-ui";
 import type { RawDataDeviceListParams } from "@/api/interface/monitor/RawDataDeviceList";
 import rawDataDeviceListService from "@/api/service/monitor/rawDataDeviceListService";
+import { useHardwareAndDeviceOptions } from "@/utils/fetchOptions";
 
 /* 定义类型 */
 interface StatePower {
@@ -201,6 +206,14 @@ const filterForDevice = computed(() => ({
 }));
 const hardwareData = ref<RowOne[]>([]);
 const deviceData = ref<RowTwo[]>([]);
+const {
+	hardwareTypes,
+	hardwareIDs,
+	deviceTypes,
+	deviceIDs,
+	fetchHardwareOptions,
+	fetchDeviceOptions,
+} = useHardwareAndDeviceOptions();
 
 /* 表格详细信息展示 */
 const openStateDetailForHardware = (row: RowOne) => {
@@ -239,7 +252,7 @@ const openStateDetailForDevice = (row: RowTwo) => {
 
 /* 搜索事件 */
 const handleSearch = () => {
-	if (!analysisMode) {
+	if (!analysisMode.value) {
 		let params: RawDataHardwareListParams = {
 			accessToken: accessToken as string,
 			filter: filter.value,
@@ -342,6 +355,9 @@ onMounted(() => {
 			count: 1,
 		},
 	});
+
+	fetchHardwareOptions(accessToken!);
+	fetchDeviceOptions(accessToken!);
 });
 </script>
 

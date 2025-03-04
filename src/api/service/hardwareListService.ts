@@ -1,5 +1,5 @@
 import request from "@/utils/request";
-import type { HardwareListParams } from "../interface/HardwareList";
+import type { HardwareListParams, HardwareListResult } from "../interface/HardwareList";
 
 /* 公共接口 - 获取硬件列表 */
 class HardwareListService {
@@ -7,7 +7,7 @@ class HardwareListService {
 		try {
 			const res = await request.post("/iotp/api/open/deviceManagement/hardware/list", params);
 			if (res.code === 0) {
-				return res.data;
+				return res.data as HardwareListResult;
 			} else {
 				throw new Error(res.msg);
 			}

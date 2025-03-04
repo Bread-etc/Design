@@ -5,15 +5,15 @@
 </template>
 
 <script lang="ts" setup>
-import type { GetDeviceTypeParams } from "@/api/interface/DeviceTypeList";
-import getDeviceTypeService from "@/api/service/deviceTypeService";
+import type { DeviceTypeListParams } from "@/api/interface/DeviceTypeList";
+import deviceTypeService from "@/api/service/deviceTypeService";
 import { useUserStore } from "@/stores/user.store";
 import { onMounted } from "vue";
 
 const accessToken = useUserStore().token;
-const handleDeviceTypeList = async (params: GetDeviceTypeParams) => {
+const handleDeviceTypeList = async (params: DeviceTypeListParams) => {
 	try {
-		const res = await getDeviceTypeService.getDeviceTypeList(params);
+		const res = await deviceTypeService.deviceTypeList(params);
 		console.log(res);
 	} catch (error) {
 		console.error(error);
@@ -23,10 +23,12 @@ const handleDeviceTypeList = async (params: GetDeviceTypeParams) => {
 onMounted(() => {
 	handleDeviceTypeList({
 		accessToken: accessToken!,
+		fields: ["info", "states"],
 		filter: {
-			deviceTypeIDs: [],
-			deviceTypeNames: [],
-			deviceClassification: [],
+			all: true,
+			deviceTypeIDs: [""],
+			deviceTypeNames: [""],
+			deviceClassification: [""],
 		},
 	});
 });

@@ -15,3 +15,4 @@
 - 增加更多`mock`接口
 - 完成`dataAnalysis-mock`下的接口模拟
 - 加入`VxeUi`适配深色模式
+- 完成`Monitor`数据监控界面及功能

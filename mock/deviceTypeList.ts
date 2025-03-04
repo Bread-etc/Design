@@ -29,73 +29,72 @@ const mockDeviceTypeList: MockMethod = {
 		}
 
 		const generateRandomDeviceType = () => ({
-			deviceTypeID: Random.string("lower", 30),
+			deviceTypeID: () => Random.string("lower", 30),
 			info: {
-				deviceClassification: Random.pick(["Type_A", "Type_B", "Type_C"]),
+				deviceClassification: () => Random.pick(["Type_A", "Type_B", "Type_C"]),
 				icon: Random.image(),
-				description: Random.csentence(1, 4),
+				description: () => Random.csentence(1, 4),
 			},
 			"states|1-4": [
 				{
-					stateID: Random.string("upper", 10, 15),
-					stateName: Random.cword(2, 4),
-					unit: Random.pick(["kw", "w", "v", "kv", "a"]),
-					valueType: Random.pick(["int", "float", "string", "enum"]),
+					stateID: () => Random.string("upper", 10, 15),
+					stateName: () => Random.cword(2, 4),
+					unit: () => Random.pick(["kw", "w", "v", "kv", "a"]),
+					valueType: () => Random.pick(["int", "float", "string", "enum"]),
 					valueRange: {
 						min: 0,
-						max: Random.integer(1000, 9999),
+						max: () => Random.integer(1000, 9999),
 					},
-					controllable: Random.boolean(),
+					controllable: () => Random.boolean(),
 				},
 			],
 			"configs|1-3": [
 				{
-					configID: Random.string("upper", 20),
-					configName: Random.cword(4, 6),
-					valueType: Random.pick(["int", "float", "string", "enum"]),
+					configID: () => Random.string("upper", 20),
+					configName: () => Random.cword(4, 6),
+					valueType: () => Random.pick(["int", "float", "string", "enum"]),
 					valueRange: {
 						0: "关闭",
 						1: "打开",
 					},
-					controllable: Random.boolean(),
+					controllable: () => Random.boolean(),
 				},
 			],
 		});
 
 		const mockData = Mock.mock({
-			"data|1-5": res.filter.deviceTypeIDs.length
+			"data|3-8": res.filter.deviceTypeIDs.length
 				? res.filter.deviceTypeIDs.map((id, index) => ({
 						deviceTypeID: id,
 						info: {
-							deviceClassification:
-								res.filter.deviceClassification[index] || Random.pick(["分类A", "分类B", "分类C"]),
-							deviceTypeName: res.filter.deviceTypeNames[index] || Random.cword(4, 8),
-							icon: Random.image(),
-							description: res.filter.deviceTypeNames[index] || Random.csentence(10, 20),
+							deviceClassification: () => Random.pick(["分类A", "分类B", "分类C"]),
+							deviceTypeName: () => Random.cword(4, 8),
+							icon: () => Random.image(),
+							description: () => Random.csentence(10, 20),
 						},
 						"states|1-6": [
 							{
-								stateID: Random.string("upper", 10, 15),
-								stateName: Random.cword(2, 4),
-								unit: Random.pick(["KW", "W", "V", "KV", "A"]),
-								valueType: Random.pick(["int", "float", "double"]),
+								stateID: () => Random.string("upper", 10, 15),
+								stateName: () => Random.cword(2, 4),
+								unit: () => Random.pick(["KW", "W", "V", "KV", "A"]),
+								valueType: () => Random.pick(["int", "float", "double"]),
 								valueRange: {
 									min: 0,
-									max: Random.integer(1000, 9999),
+									max: () => Random.integer(1000, 9999),
 								},
-								controllable: Random.boolean(),
+								controllable: () => Random.boolean(),
 							},
 						],
 						"configs|1-3": [
 							{
-								configID: Random.string("upper", 20),
-								configName: Random.cword(4, 6),
-								valueType: "enum",
+								configID: () => Random.string("upper", 20),
+								configName: () => Random.cword(4, 6),
+								valueType: () => Random.pick(["int", "float", "string", "enum"]),
 								valueRange: {
 									0: "关闭",
 									1: "打开",
 								},
-								controllable: Random.boolean(),
+								controllable: () => Random.boolean(),
 							},
 						],
 					}))

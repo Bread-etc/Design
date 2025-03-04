@@ -21,17 +21,15 @@ const mockHardwareTypeList: MockMethod = {
 	response: (body: any) => {
 		const res: bodyType = body.body;
 		if (res.accessToken) {
-			let typeID = 1;
-
 			const mockData = Mock.mock({
-				data: [
+				"data|3-7": [
 					{
-						hardwareTypeID: "HARDWARE_" + typeID,
+						hardwareTypeID: () => "HARDWARE_" + Random.string("upper", 4),
 						info: {
-							hardwareTypeName: Random.cword(2, 4),
+							hardwareTypeName: () => "硬件" + Random.integer(1, 1000),
 							icon: Random.image("200x100", "#4A7BF7", "Hardware"),
-							description: Random.csentence(1, 3),
-							model: Random.string("upper", 10),
+							description: () => Random.csentence(1, 3),
+							model: () => Random.string("upper", 10),
 							manufactory: "信锐",
 							accessway: "LoRa",
 							powerSupplyMode: "AC220V",
@@ -39,29 +37,29 @@ const mockHardwareTypeList: MockMethod = {
 						},
 						"states|1-3": [
 							{
-								stateID: "DEV_" + Random.string("upper", 6),
-								stateName: Random.pick(["功率", "电流", "开关状态", "MAC地址"]),
-								unit: Random.pick(["w", "A", "V"]),
-								valueType: Random.pick(["int", "float", "enum", "string"]),
+								stateID: () => "DEV_" + Random.string("upper", 6),
+								stateName: () => Random.pick(["功率", "电流", "开关状态", "MAC地址"]),
+								unit: () => Random.pick(["w", "A", "V"]),
+								valueType: () => Random.pick(["int", "float", "enum", "string"]),
 								valueRange: [
 									{
 										min: 0,
-										max: Random.integer(1000, 9999),
+										max: () => Random.integer(1000, 9999),
 									},
 								],
-								controllable: Random.boolean(),
+								controllable: () => Random.boolean(),
 							},
 						],
 						"configs|1-3": [
 							{
-								configID: "DEV_" + Random.string("upper", 10),
-								configName: Random.cword(2, 4),
-								valueType: Random.pick(["int", "float", "enum", "string"]),
+								configID: () => "DEV_" + Random.string("upper", 10),
+								configName: () => Random.cword(2, 4),
+								valueType: () => Random.pick(["int", "float", "enum", "string"]),
 								valueRange: {
 									"0": "关闭",
 									"1": "打开",
 								},
-								controllable: Random.boolean(),
+								controllable: () => Random.boolean(),
 							},
 						],
 					},

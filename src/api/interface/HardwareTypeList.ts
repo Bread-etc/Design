@@ -53,5 +53,5 @@ export interface HardwareTypeListResult {
 			};
 			controllable: boolean;
 		}>;
-	};
+	}[];
 }
