@@ -66,6 +66,7 @@ import { useRouter } from "vue-router";
 import { useUserStore } from "@/stores/user.store";
 import { showToast } from "@/utils/toast";
 import { IoHardwareChip } from "vue-icons-plus/io";
+import type { LoginParams } from "@/api/interface/Auth";
 
 const userStore = useUserStore();
 const router = useRouter();
@@ -75,7 +76,12 @@ const password = ref("");
 
 const handleLogin = async () => {
 	try {
-		await userStore.login(username.value, password.value);
+		let params: LoginParams = {
+			username: username.value,
+			password: password.value,
+			token: "5331d12686944c0d09fc1dd1ea894c83",
+		};
+		await userStore.login(params);
 		showToast("登录成功", `欢迎回来，${username.value}!`, "success");
 		// 登录成功后导航到主页
 		router.push({ name: "home" });

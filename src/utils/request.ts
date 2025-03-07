@@ -1,23 +1,15 @@
 import axios, { type AxiosInstance, type AxiosRequestConfig, type AxiosResponse } from "axios";
 import { showToast } from "./toast";
-
-interface Result<T = any> {
-	code: number | string;
-	msg: string;
-	data: T;
-	total: number;
-}
-
 class Request {
 	baseURL: string;
 	timeout: number;
 
 	constructor() {
-		this.baseURL = import.meta.env.VITE_APP_BASE_URL;
+		this.baseURL = "/api";
 		this.timeout = 50000;
 	}
 
-	request<T = any>(options: AxiosRequestConfig): Promise<Result<T>> {
+	request<T = any>(options: AxiosRequestConfig): Promise<T> {
 		const instance: AxiosInstance = axios.create();
 		this.setInterceptors(instance);
 		const opts = this.mergeOptions(options);
@@ -25,22 +17,28 @@ class Request {
 	}
 
 	// GET 请求
-	get<T = any>(url: string, data?: any, outHeaders = {}): Promise<Result<T>> {
+	get<T = any>(url: string, data?: any, outHeaders = {}): Promise<T> {
 		return this.request<T>({
 			method: "get",
 			url,
 			params: { ...data },
-			headers: outHeaders,
+			headers: {
+				"Content-Type": "application/json",
+				...outHeaders,
+			},
 		});
 	}
 
 	// POST 请求
-	post<T = any>(url: string, body = {}, outHeaders = {}): Promise<Result<T>> {
+	post<T = any>(url: string, body = {}, outHeaders = {}): Promise<T> {
 		return this.request<T>({
 			method: "post",
 			url,
 			data: body, // 正确传递数据
-			headers: outHeaders, // 正确传递头部信息
+			headers: {
+				"Content-Type": "application/json",
+				...outHeaders,
+			}, // 正确传递头部信息
 		});
 	}
 
@@ -120,7 +118,7 @@ class Request {
 				}
 
 				// 如果是非 200 状态码，返回的 data 可以根据需要处理，避免影响后续操作
-				return data;
+				return res;
 			},
 			(err) => {
 				if (loading) {

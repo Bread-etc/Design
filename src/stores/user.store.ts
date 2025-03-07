@@ -1,25 +1,25 @@
 import { defineStore } from "pinia";
 import authService from "@/api/service/authService";
-import type { UserState, LoginResult } from "@/api/interface/Auth";
+import type { UserState, LoginParams } from "@/api/interface/Auth";
 
 export const useUserStore = defineStore("user", {
 	state: (): UserState => ({
-		token: null,
+		accessToken: null,
 		username: "",
 		isAuthenticated: false,
-		expiresAt: null, // 增加 expiresAt 状态字段
-		role: "",
+		expiresIn: null,
+		role: null,
 	}),
 
 	actions: {
 		// 登录逻辑
-		async login(username: string, password: string) {
+		async login(info: LoginParams) {
 			try {
-				const res: LoginResult = await authService.login(username, password);
-				this.token = res.accessToken;
-				this.username = username;
+				const res = await authService.login(info);
+				this.accessToken = res.accessToken;
+				this.username = info.username;
 				this.isAuthenticated = true;
-				this.expiresAt = Date.now() + res.expiresIn * 1000; // 当前时间 + 有效时间(ms)
+				this.expiresIn = Date.now() + res.expiresIn * 1000; // 计算绝对过期时间;
 				this.role = res.role;
 			} catch (err) {
 				throw err;
@@ -28,8 +28,8 @@ export const useUserStore = defineStore("user", {
 
 		// 验证 Token 是否有效
 		validateToken() {
-			if (this.token && this.expiresAt) {
-				if (Date.now() > this.expiresAt) {
+			if (this.accessToken && this.expiresIn) {
+				if (Date.now() > this.expiresIn) {
 					this.logout(); // Token 过期自动登出
 				}
 			}
@@ -37,10 +37,10 @@ export const useUserStore = defineStore("user", {
 
 		// 登出逻辑
 		logout() {
-			this.token = null;
+			this.accessToken = null;
 			this.username = "";
 			this.isAuthenticated = false;
-			this.expiresAt = null;
+			this.expiresIn = null;
 			this.role = "";
 		},
 	},
