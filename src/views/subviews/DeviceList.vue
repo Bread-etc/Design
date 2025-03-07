@@ -27,16 +27,13 @@
 </template>
 
 <script lang="ts" setup>
-import type { DeviceTypeListParams } from "@/api/interface/DeviceTypeList";
-import deviceTypeService from "@/api/service/deviceTypeService";
-import { useUserStore } from "@/stores/user.store";
+import type { DeviceGetGroupParams } from "@/api/interface/device/DeviceGetGroup";
 import { onMounted, ref } from "vue";
 import { VxeUI } from "vxe-pc-ui";
 
-const accessToken = useUserStore().token;
-const handleDeviceTypeList = async (params: DeviceTypeListParams) => {
+const handleHardwareAndDeviceSpaceStruction = async (params: DeviceGetGroupParams) => {
 	try {
-		const res = await deviceTypeService.deviceTypeList(params);
+		const res = await DeviceGetGroupService;
 		console.log(res);
 	} catch (error) {
 		console.error(error);

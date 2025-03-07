@@ -79,7 +79,7 @@ const handleLogin = async () => {
 		let params: LoginParams = {
 			username: username.value,
 			password: password.value,
-			token: "5331d12686944c0d09fc1dd1ea894c83",
+			token: "8162f59fe661cc1dd95e536c17cfcc32",
 		};
 		await userStore.login(params);
 		showToast("登录成功", `欢迎回来，${username.value}!`, "success");
