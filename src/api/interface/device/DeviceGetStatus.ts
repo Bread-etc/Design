@@ -37,5 +37,5 @@ export interface DeviceGetStatusResult {
 		[key: string]: DeviceGetStatusInner;
 	};
 	/* @ts-ignore */
-	success: boolean;
+	success?: boolean;
 }

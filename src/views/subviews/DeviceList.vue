@@ -44,6 +44,7 @@
 				</a-checkbox-group>
 
 				<a-table
+					:ellipsis="true"
 					:scroll="{ x: 1000 }"
 					bordered
 					:columns="filteredColumns"
@@ -68,8 +69,7 @@ import deviceGetAllDevTypeService from "@/api/service/device/deviceGetAllDevType
 import deviceGetAllVirDevTypeService from "@/api/service/device/deviceGetAllVirDevTypeService";
 import deviceGetStatusService from "@/api/service/device/deviceGetStatusService";
 import type { TableColumnsType } from "ant-design-vue";
-import { computed, onMounted, ref, toRaw } from "vue";
-import type { Ref } from "vue";
+import { computed, onMounted, ref, toRaw, type Ref } from "vue";
 
 /*
 	1、获取全部硬件、设备，保存到 hardwareTypeList 和 deviceTypeList
@@ -120,6 +120,7 @@ const dataFields = computed(() => {
 });
 /* 计算动态列, 空白列给予 “ - ” */
 const filteredColumns = computed(() => {
+	const getCellValue = (text: string) => (text !== "" && text !== undefined ? text : "-");
 	const dynamicColumns = selectedColumns.value.map((field) => {
 		if (field.startsWith("cloud: ")) {
 			const key = field.replace("cloud: ", "");
@@ -128,7 +129,7 @@ const filteredColumns = computed(() => {
 				dataIndex: ["data", "cloud_state", key],
 				key,
 				width: 120,
-				customRender: ({ text }: any) => (text !== "" && text !== undefined ? text : "-"),
+				customRender: ({ text }: any) => getCellValue(text),
 			};
 		} else if (field.startsWith("sync: ")) {
 			const key = field.replace("sync: ", "");
@@ -137,7 +138,7 @@ const filteredColumns = computed(() => {
 				dataIndex: ["data", "sync_state", key],
 				key,
 				width: 120,
-				customRender: ({ text }: any) => (text !== "" && text !== undefined ? text : "-"),
+				customRender: ({ text }: any) => getCellValue(text),
 			};
 		} else {
 			return {
@@ -145,7 +146,7 @@ const filteredColumns = computed(() => {
 				dataIndex: ["data", field],
 				key: field,
 				width: 120,
-				customRender: ({ text }: any) => (text !== "" && text !== undefined ? text : "-"),
+				customRender: ({ text }: any) => getCellValue(text),
 			};
 		}
 	});
@@ -291,6 +292,10 @@ onMounted(async () => {
 :global([data-bs-theme="dark"] .ant-table-cell) {
 	background-color: #2c2c2c !important;
 	border-color: white;
+	color: white !important;
+}
+
+:global([data-bs-theme="dark"] .ant-empty-description) {
 	color: white !important;
 }
 
