@@ -18,3 +18,4 @@
 - 完成`Monitor`数据监控界面及功能
 - 删除`mockjs`和`vite-plugin-mock`
 - 添加真实接口
+- 完成`设备列表`页面

@@ -7,7 +7,7 @@ export interface DeviceGetStatusParams {
 	};
 }
 
-interface DeviceGetStatusInner {
+export interface DeviceGetStatusInner {
 	[key: string]: {
 		[key: string]: {
 			success: boolean;

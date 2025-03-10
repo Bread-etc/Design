@@ -120,7 +120,7 @@
 				<p class="text-muted">总计 {{ deviceData.length }}</p>
 			</div>
 
-			<vxe-table border height="350" :data="deviceData">
+			<!-- <vxe-table border height="350" :data="deviceData">
 				<vxe-column field="dataID" title="ID" width="50" align="center"></vxe-column>
 				<vxe-column field="deviceTypeID" title="设备类型"></vxe-column>
 				<vxe-column field="deviceID" title="设备 ID"></vxe-column>
@@ -133,7 +133,7 @@
 						</vxe-button>
 					</template>
 				</vxe-column>
-			</vxe-table>
+			</vxe-table> -->
 		</div>
 	</div>
 </template>
@@ -144,7 +144,6 @@ import { ref, onMounted, computed } from "vue";
 import { useUserStore } from "@/stores/user.store";
 import type { RawDataHardwareListParams } from "@/api/interface/monitor/RawDataHardwareList";
 import rawDataHardwareListService from "@/api/service/monitor/rawDataHardwareListService";
-import { VxeUI } from "vxe-pc-ui";
 import type { RawDataDeviceListParams } from "@/api/interface/monitor/RawDataDeviceList";
 import rawDataDeviceListService from "@/api/service/monitor/rawDataDeviceListService";
 import { useHardwareAndDeviceOptions } from "@/utils/fetchOptions";
@@ -177,7 +176,7 @@ interface RowTwo {
 }
 
 const analysisMode = ref(false);
-const accessToken = useUserStore().token;
+const accessToken = useUserStore().accessToken;
 const hardwareID = ref<string>("");
 const hardwareName = ref<string>("");
 const deviceID = ref<string>("");
@@ -229,10 +228,10 @@ const openStateDetailForHardware = (row: RowOne) => {
 		content = "未知的状态类型";
 	}
 
-	VxeUI.modal.open({
-		title: "状态详情",
-		content: content || "无硬件状态",
-	});
+	// VxeUI.modal.open({
+	// 	title: "状态详情",
+	// 	content: content || "无硬件状态",
+	// });
 };
 
 const openStateDetailForDevice = (row: RowTwo) => {
@@ -244,10 +243,10 @@ const openStateDetailForDevice = (row: RowTwo) => {
 		content = "未知的状态类型";
 	}
 
-	VxeUI.modal.open({
-		title: "状态详情",
-		content: content || "无设备状态",
-	});
+	// VxeUI.modal.open({
+	// 	title: "状态详情",
+	// 	content: content || "无设备状态",
+	// });
 };
 
 /* 搜索事件 */

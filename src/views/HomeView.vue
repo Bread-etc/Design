@@ -1,7 +1,7 @@
 <template>
 	<div class="d-flex vh-100">
 		<!-- 左侧导航栏 -->
-		<div class="navbar d-flex flex-column p-3">
+		<div class="navbar d-flex flex-column p-3" style="width: 18vw">
 			<div class="d-flex w-100 align-items-center ps-2 pe-2 pb-2 mb-2 border-bottom border-2">
 				<span class="fs-5 fw-bold font-monospace user-select-none">Iot Platform</span>
 			</div>
@@ -68,7 +68,7 @@
 		</div>
 
 		<!-- 右侧主要内容 -->
-		<div class="d-flex flex-grow-1 p-4" style="background-color: var(--bg-main)">
+		<div class="d-flex p-4" style="background-color: var(--bg-main); width: 82vw">
 			<router-view v-slot="{ Component }">
 				<transition name="fade" mode="out-in">
 					<keep-alive>

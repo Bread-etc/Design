@@ -15,6 +15,7 @@
 	"dependencies": {
 		"@popperjs/core": "^2.11.8",
 		"@types/bootstrap": "^5.2.10",
+		"ant-design-vue": "4.x",
 		"axios": "^1.7.9",
 		"bootstrap": "^5.3.3",
 		"pinia": "^2.2.6",
@@ -22,9 +23,7 @@
 		"sass": "1.77.6",
 		"vue": "^3.5.13",
 		"vue-icons-plus": "^0.1.8",
-		"vue-router": "^4.4.5",
-		"vxe-pc-ui": "^4.3.78",
-		"vxe-table": "^4.10.5"
+		"vue-router": "^4.4.5"
 	},
 	"devDependencies": {
 		"@tsconfig/node22": "^22.0.0",
@@ -40,6 +39,7 @@
 		"npm-run-all2": "^7.0.1",
 		"prettier": "^3.3.3",
 		"typescript": "~5.6.3",
+		"unplugin-vue-components": "^28.4.1",
 		"vite": "^6.0.1",
 		"vue-tsc": "^2.1.10"
 	}

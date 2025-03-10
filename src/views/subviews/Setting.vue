@@ -27,7 +27,7 @@
 
 <script lang="ts" setup>
 import { ref } from "vue";
-import { VxeUI, type VxeGlobalThemeName } from "vxe-pc-ui";
+// import { VxeUI, type VxeGlobalThemeName } from "vxe-pc-ui";
 
 // 当前选择的主题，默认为 "light"
 const theme = ref("light");
@@ -37,14 +37,14 @@ const selectTheme = (mode: string) => {
 	theme.value = mode;
 	localStorage.setItem("theme", mode); // 保存用户设置
 	document.body.setAttribute("data-bs-theme", mode); // 设置主题
-	VxeUI.setTheme(theme.value as VxeGlobalThemeName); // 设置表格主题
+	// VxeUI.setTheme(theme.value as VxeGlobalThemeName); // 设置表格主题
 };
 
 // 初始化所选择主题
 const savedTheme = localStorage.getItem("theme");
 if (savedTheme) {
 	theme.value = savedTheme;
-	VxeUI.setTheme(theme.value as VxeGlobalThemeName);
+	// VxeUI.setTheme(theme.value as VxeGlobalThemeName);
 }
 </script>
 
