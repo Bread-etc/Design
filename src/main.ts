@@ -24,7 +24,6 @@ app.use(Antd);
 // 添加全局初始化浅色、深色主题
 const savedTheme = localStorage.getItem("theme") || "light";
 document.body.setAttribute("data-bs-theme", savedTheme);
-// VxeUI.setTheme(savedTheme as VxeGlobalThemeName);
 
 // 验证 Token 有效性
 const userStore = useUserStore();

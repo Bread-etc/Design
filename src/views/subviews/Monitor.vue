@@ -1,362 +1,257 @@
 <template>
 	<div class="p-2 w-100">
-		<h4 class="fw-bold pb-3 mb-3 border-bottom border-2 d-flex justify-content-between">
-			数据监控
-			<vxe-switch
-				v-model="analysisMode"
-				open-label="设备"
-				close-label="硬件"
-				style="transform: scale(1.2); transform-origin: center"
-			></vxe-switch>
-		</h4>
+		<h4 class="fw-bold pb-3 mb-3 border-bottom border-2" style="height: 10%">数据监控</h4>
 
-		<!-- 筛选框部分 -->
-		<div class="d-flex flex-column my-3 p-1">
-			<!-- 第一行：硬件类型、硬件ID、硬件名称 -->
-			<div class="d-flex align-items-center gap-3" v-if="!analysisMode">
-				<!-- 硬件类型 -->
-				<select id="hardwareType" class="form-select" v-model="filter.hardwareTypeID">
-					<option value="">请选择硬件类型</option>
-					<option v-for="item in hardwareTypes" :key="item.id" :value="item.id">
-						{{ item.name }}
-					</option>
-				</select>
-
-				<!-- 硬件ID -->
-				<select id="hardwareIDs" class="form-select" v-model="hardwareID">
-					<!-- 将value设置为一个空数组，与filter.hardwareID的类型保持一致 -->
-					<option value="">请选择硬件ID</option>
-					<option v-for="item in hardwareIDs" :key="item.id" :value="item.name">
-						{{ item.name }}
-					</option>
-				</select>
-
-				<!-- 硬件名称 -->
-				<input
-					type="text"
-					id="hardwareName"
-					class="form-control flex-grow-1"
-					v-model="hardwareName"
-					placeholder="输入硬件名称"
-				/>
+		<div class="d-flex flex-wrap justify-content-around" style="height: 90%">
+			<div class="chartCard rounded-3">
+				<div
+					ref="chartDomOne"
+					class="w-100 h-100 d-flex justify-content-center align-items-center"
+				></div>
 			</div>
-
-			<!-- 第一行：设备类型、设备ID、设备名称 -->
-			<div class="d-flex align-items-center gap-3" v-if="analysisMode">
-				<!-- 设备类型 -->
-				<select id="deviceType" class="form-select" v-model="filterForDevice.deviceTypeID">
-					<option value="">请选择设备类型</option>
-					<option v-for="item in deviceTypes" :key="item.id" :value="item.id">
-						{{ item.name }}
-					</option>
-				</select>
-
-				<!-- 设备ID -->
-				<select id="deviceID" class="form-select" v-model="deviceID">
-					<option value="">请选择设备ID</option>
-					<option v-for="item in deviceIDs" :key="item.id" :value="item.id">
-						{{ item.name }}
-					</option>
-				</select>
-
-				<!-- 设备名称 -->
-				<input
-					type="text"
-					id="deviceName"
-					class="form-control flex-grow-1"
-					v-model="deviceName"
-					placeholder="输入设备名称"
-				/>
+			<div class="chartCard rounded-3 d-flex justify-content-center align-items-center">
+				告警列表
 			</div>
-
-			<!-- 第二行：时间选择 -->
-			<div class="d-flex align-items-center gap-3 mt-3">
-				<!-- 开始时间 -->
-				<label class="text-nowrap pe-1">开始时间:</label>
-				<input type="datetime-local" id="timeStart" class="form-control" v-model="timeStart" />
-
-				<!-- 结束时间 -->
-				<label class="text-nowrap pe-1">结束时间:</label>
-				<input type="datetime-local" id="timeEnd" class="form-control" v-model="timeEnd" />
-
-				<div class="d-flex align-items-center">
-					<button
-						type="submit"
-						class="btn btn-primary fw-bold border-0 text-nowrap px-3"
-						style="background-color: var(--color-main)"
-						@click="handleSearch()"
-					>
-						搜索
-					</button>
-				</div>
+			<div class="chartCard rounded-3 d-flex justify-content-center align-items-center">
+				<div
+					ref="chartDomTwo"
+					class="w-100 h-100 d-flex justify-content-center align-items-center"
+				></div>
 			</div>
-		</div>
-
-		<div class="dataCard p-4 rounded-4" v-show="!analysisMode">
-			<div class="d-flex justify-content-between align-items-center w-100 pb-2">
-				<h5 class="fw-bold">硬件数据</h5>
-				<p class="text-muted">总计 {{ hardwareData.length }}</p>
+			<div class="chartCard rounded-3 d-flex justify-content-center align-items-center">
+				巡检列表
 			</div>
-
-			<vxe-table border height="350" :data="hardwareData">
-				<vxe-column field="dataID" title="ID" width="50" align="center"></vxe-column>
-				<vxe-column field="hardwareTypeID" title="硬件类型"></vxe-column>
-				<vxe-column field="hardwareID" title="硬件 ID"></vxe-column>
-				<vxe-column field="time" title="时间" width="200"></vxe-column>
-
-				<vxe-column field="state" title="硬件状态" width="150" align="center" size="medium">
-					<template #default="{ row }">
-						<vxe-button mode="text" @click="openStateDetailForHardware(row)">
-							点击查看详情
-						</vxe-button>
-					</template>
-				</vxe-column>
-			</vxe-table>
-		</div>
-
-		<div class="dataCard p-4 rounded-4" v-show="analysisMode">
-			<div class="d-flex justify-content-between align-items-center w-100 pb-2">
-				<h5 class="fw-bold">设备数据</h5>
-				<p class="text-muted">总计 {{ deviceData.length }}</p>
-			</div>
-
-			<!-- <vxe-table border height="350" :data="deviceData">
-				<vxe-column field="dataID" title="ID" width="50" align="center"></vxe-column>
-				<vxe-column field="deviceTypeID" title="设备类型"></vxe-column>
-				<vxe-column field="deviceID" title="设备 ID"></vxe-column>
-				<vxe-column field="time" title="时间" width="200"></vxe-column>
-
-				<vxe-column field="state" title="设备状态" width="150" align="center" size="medium">
-					<template #default="{ row }">
-						<vxe-button mode="text" @click="openStateDetailForDevice(row)">
-							点击查看详情
-						</vxe-button>
-					</template>
-				</vxe-column>
-			</vxe-table> -->
 		</div>
 	</div>
 </template>
 
 <script lang="ts" setup>
-/* 此处为数据监控面板，主要展示硬件数据列表、设备数据、加工任务、设备加工、空间加工数据列表 */
-import { ref, onMounted, computed } from "vue";
-import { useUserStore } from "@/stores/user.store";
-import type { RawDataHardwareListParams } from "@/api/interface/monitor/RawDataHardwareList";
-import rawDataHardwareListService from "@/api/service/monitor/rawDataHardwareListService";
-import type { RawDataDeviceListParams } from "@/api/interface/monitor/RawDataDeviceList";
-import rawDataDeviceListService from "@/api/service/monitor/rawDataDeviceListService";
-import { useHardwareAndDeviceOptions } from "@/utils/fetchOptions";
+import type { DeviceGetAllVirDevTypeParams } from "@/api/interface/device/DeviceGetAllVirDevType";
+import type {
+	DeviceGetStatusInner,
+	DeviceGetStatusParams,
+	DeviceGetStatusResult,
+} from "@/api/interface/device/DeviceGetStatus";
+import type { MonitorGetAlarmLogListResult } from "@/api/interface/monitor/MonitorGetAlarmLogList";
+import deviceGetAllVirDevTypeService from "@/api/service/device/deviceGetAllVirDevTypeService";
+import deviceGetStatusService from "@/api/service/device/deviceGetStatusService";
+import monitorGetAlarmLogListService from "@/api/service/monitor/monitorGetAlarmLogListService";
+import monitorGetPollingPolicyService from "@/api/service/monitor/monitorGetPollingPolicyService";
+import { ref, onMounted, type Ref, nextTick } from "vue";
+import * as echarts from "echarts";
 
-/* 定义类型 */
-interface StatePower {
-	POWERS_1: string;
-	VOLTAGE_1: number;
-}
+/* 变量 */
 
-interface StateValue {
-	stateID: string;
-	value: number;
-}
+// 巡检策略列表
+const pollingList = ref<{ description: string; id: number; name: string }[]>([]);
+// 告警列表
+const alarmList = ref<MonitorGetAlarmLogListResult["data"] | {}>({});
+// 设备类型列表
+const deviceTypeList = ref<{ type_id: string; type_name: string; model: string }[]>([]);
+// 设备信息列表
+const deviceInfo = ref<{ [key: string]: DeviceGetStatusInner }[]>([]);
+// 深色模式
+const isDarkMode = localStorage.getItem("theme") === "dark" ? true : false;
 
-interface RowOne {
-	dataID: number;
-	hardwareTypeID: string;
-	hardwareID: string;
-	time: string;
-	state: StatePower | StateValue[];
-}
-
-interface RowTwo {
-	dataID: number;
-	deviceTypeID: string;
-	deviceID: string;
-	time: string;
-	state: StateValue[];
-}
-
-const analysisMode = ref(false);
-const accessToken = useUserStore().accessToken;
-const hardwareID = ref<string>("");
-const hardwareName = ref<string>("");
-const deviceID = ref<string>("");
-const deviceName = ref<string>("");
-const timeStart = ref<string>("");
-const timeEnd = ref<string>("");
-const filter = computed(() => ({
-	hardwareTypeID: "",
-	hardwareIDs: [hardwareID.value], // 变成 computed 后，每次 hardwareID.value 变化都会更新
-	hardwareNames: [hardwareName.value], // 同理
-	spaceIDs: [],
-	spaceNames: [""],
-	spaceRecursive: true,
-	timeStart: timeStart.value,
-	timeEnd: timeEnd.value,
-}));
-const filterForDevice = computed(() => ({
-	deviceTypeID: "",
-	deviceIDs: [deviceID.value],
-	deviceNames: [deviceName.value],
-	spaceIDs: [],
-	spaceNames: [""],
-	spaceRecursive: true,
-	timeStart: timeStart.value,
-	timeEnd: timeEnd.value,
-}));
-const hardwareData = ref<RowOne[]>([]);
-const deviceData = ref<RowTwo[]>([]);
-const {
-	hardwareTypes,
-	hardwareIDs,
-	deviceTypes,
-	deviceIDs,
-	fetchHardwareOptions,
-	fetchDeviceOptions,
-} = useHardwareAndDeviceOptions();
-
-/* 表格详细信息展示 */
-const openStateDetailForHardware = (row: RowOne) => {
-	let content = "";
-
-	if (Array.isArray(row.state)) {
-		// 如果 `state` 是数组（StateValue[]）
-		content = row.state.map((s) => `硬件状态 ID: ${s.stateID}, 状态值: ${s.value}`).join("\n");
-	} else if ("POWERS_1" in row.state && "VOLTAGE_1" in row.state) {
-		// 如果 `state` 是对象（StatePower）
-		content = `功率: ${row.state.POWERS_1}, 电压: ${row.state.VOLTAGE_1}`;
-	} else {
-		content = "未知的状态类型";
-	}
-
-	// VxeUI.modal.open({
-	// 	title: "状态详情",
-	// 	content: content || "无硬件状态",
-	// });
-};
-
-const openStateDetailForDevice = (row: RowTwo) => {
-	let content = "";
-
-	if (Array.isArray(row.state)) {
-		content = row.state.map((s) => `设备状态 ID: ${s.stateID}，状态值: ${s.value}`).join("\n");
-	} else {
-		content = "未知的状态类型";
-	}
-
-	// VxeUI.modal.open({
-	// 	title: "状态详情",
-	// 	content: content || "无设备状态",
-	// });
-};
-
-/* 搜索事件 */
-const handleSearch = () => {
-	if (!analysisMode.value) {
-		let params: RawDataHardwareListParams = {
-			accessToken: accessToken as string,
-			filter: filter.value,
-			positioning: {
-				maxID: null,
-				sinceID: null,
-				count: null,
-			},
-		};
-		handleHardwareList(params);
-	} else {
-		let params: RawDataDeviceListParams = {
-			accessToken: accessToken as string,
-			filter: filterForDevice.value,
-			positioning: {
-				maxID: null,
-				sinceID: null,
-				count: null,
-			},
-		};
-		handleDeviceList(params);
-	}
-};
+/* echart 图表 */
+const chartDomOne = ref<HTMLElement | null>(null);
+const chartDomTwo = ref<HTMLElement | null>(null);
 
 /* 网络请求事件 */
-const handleHardwareList = async (params: RawDataHardwareListParams) => {
+const fetchGetPollingPolicy = async () => {
 	try {
-		const res = await rawDataHardwareListService.rawDataHardwareList(params);
+		const res = await monitorGetPollingPolicyService.getPollingPolicy({
+			appId: 4,
+			isSpace: false,
+		});
+		pollingList.value = res.data;
+	} catch (err) {
+		console.error(err);
+	}
+};
 
-		if (res.data.results) {
-			// 处理返回的数据，格式化为表格所需格式
-			hardwareData.value = res.data.results.map((item: any) => ({
-				dataID: item.dataID,
-				hardwareTypeID: item.hardwareTypeID,
-				hardwareID: item.hardwareID,
-				time: item.time,
-				state: item.states,
-			}));
-		}
+const fetchGetAlarmLogList = async () => {
+	try {
+		const res = await monitorGetAlarmLogListService.getAlarmLogList({
+			appId: 4,
+			alarmRanks: ["1", "2", "3", "4"],
+			dealMethod: "UnRead",
+			timeStart: "2025-03-01 00:00:00",
+			timeEnd: "2025-04-01 20:00:00",
+			current: 1,
+			rowCount: 20,
+		});
+		alarmList.value = res.data;
+	} catch (err) {
+		console.error(err);
+	}
+};
+
+const fetchGetAllVirDevType = async (params: DeviceGetAllVirDevTypeParams) => {
+	try {
+		const res = await deviceGetAllVirDevTypeService.getAllVirDevType(params);
+		deviceTypeList.value = res.data;
 	} catch (error) {
 		console.error(error);
 	}
 };
 
-const handleDeviceList = async (params: RawDataDeviceListParams) => {
+const fetchGetStatus = async (params: DeviceGetStatusParams) => {
 	try {
-		const res = await rawDataDeviceListService.rawDataDeviceList(params);
-
-		if (res.data.results) {
-			// 处理返回的数据，格式化为表格所需格式
-			deviceData.value = res.data.results.map((item: any) => ({
-				dataID: item.dataID,
-				deviceTypeID: item.deviceTypeID,
-				deviceID: item.deviceID,
-				time: item.time,
-				state: item.states,
-			}));
-		}
+		const res = await deviceGetStatusService.getStatus(params);
+		return res;
 	} catch (error) {
 		console.error(error);
 	}
 };
 
-/* 初始化网络请求事件 */
-onMounted(() => {
-	handleHardwareList({
-		accessToken: accessToken!,
-		filter: {
-			hardwareTypeID: "",
-			hardwareIDs: [""],
-			hardwareNames: [""],
-			spaceIDs: [],
-			spaceNames: [""],
-			spaceRecursive: true,
-			timeStart: "",
-			timeEnd: "",
-		},
-		positioning: {
-			maxID: 1,
-			sinceID: 1,
-			count: 1,
-		},
+/* 处理请求体 */
+const constructReq = (list: Ref<{ type_id: string; type_name: string; model: string }[]>) => {
+	let req: DeviceGetStatusParams = {};
+	list.value.forEach((item) => {
+		req[item.type_id] = {
+			all: true,
+			group_ids: [],
+			device_ids: [],
+		};
 	});
 
-	handleDeviceList({
-		accessToken: accessToken!,
-		filter: {
-			deviceTypeID: "",
-			deviceIDs: [""],
-			deviceNames: [""],
-			spaceIDs: [],
-			spaceNames: [""],
-			spaceRecursive: true,
-			timeStart: "",
-			timeEnd: "",
-		},
-		positioning: {
-			maxID: 1,
-			sinceID: 1,
-			count: 1,
-		},
+	return req;
+};
+
+/* 去除多余空对象 */
+const filterEmptyObject = (res: DeviceGetStatusResult) => {
+	let newRes: { [key: string]: DeviceGetStatusInner }[] = [];
+
+	for (const key in res) {
+		if (key !== "success" && Object.keys(res[key]).length !== 0) {
+			newRes.push(res[key]);
+		}
+	}
+
+	return newRes;
+};
+
+/* 生命周期 */
+onMounted(async () => {
+	await fetchGetPollingPolicy();
+	await fetchGetAlarmLogList();
+	await fetchGetAllVirDevType({
+		appName: null,
+		current: 1,
+		rowCount: 20,
 	});
 
-	fetchHardwareOptions(accessToken!);
-	fetchDeviceOptions(accessToken!);
+	// 获取设备状态
+	let D = await fetchGetStatus(constructReq(deviceTypeList));
+	if (D) {
+		deviceInfo.value = filterEmptyObject(D);
+	}
+
+	// console.log("巡检策略列表:", pollingList.value);
+	// console.log("告警列表:", alarmList.value);
+	// console.log("设备信息:", deviceInfo.value);
+
+	// 确保 DOM 渲染完成后再初始化 ECharts
+	await nextTick();
+
+	if (chartDomOne.value) {
+		// **计算可用与不可用设备数量**
+		let availableCount = deviceInfo.value.length;
+		let unavailableCount = deviceTypeList.value.length - availableCount;
+		const chartInstance = echarts.init(chartDomOne.value);
+
+		const option = {
+			tooltip: {
+				trigger: "item",
+			},
+			legend: {
+				top: "5%",
+				left: "center",
+				textStyle: {
+					color: isDarkMode ? "#fff" : "#000",
+				},
+			},
+			series: [
+				{
+					name: "设备状态",
+					type: "pie",
+					radius: ["40%", "70%"],
+					avoidLabelOverlap: false,
+					label: {
+						show: false,
+						position: "center",
+					},
+					emphasis: {
+						label: {
+							show: true,
+							fontSize: 16,
+							fontWeight: "bold",
+							color: isDarkMode ? "#fff" : "#000",
+						},
+					},
+					data: [
+						{ value: availableCount, name: "可用设备", itemStyle: { color: "#4CAF50" } },
+						{ value: unavailableCount, name: "不可用设备", itemStyle: { color: "#F44336" } },
+					],
+				},
+			],
+		};
+
+		chartInstance.setOption(option);
+	}
+
+	if (chartDomTwo.value) {
+		const chartInstance = echarts.init(chartDomTwo.value);
+
+		let statusData: DeviceGetStatusInner[] = [];
+		deviceInfo.value.forEach((device) => {
+			statusData.push(Object.values(device)[0]);
+		});
+		let data = statusData.map((item) => ({
+			name: item.name,
+			value: 1,
+			state: item.states,
+			time: item.onlineTime,
+		}));
+
+		const option = {
+			tooltip: {
+				trigger: "item",
+				formatter: (params: any) => {
+					let status = "";
+					if (params.data.state === "online") {
+						status = "在线";
+					} else if (params.data.state === "offline") {
+						status = "离线";
+					} else {
+						status = "异常";
+					}
+					return `设备名称: ${params.data.name}<br/>状态: ${status}<br/>最后在线: ${params.data.time}`;
+				},
+			},
+			legend: {
+				top: "5%",
+				left: "center",
+				textStyle: { color: isDarkMode ? "#fff" : "#000" },
+			},
+			series: [
+				{
+					name: "设备状态",
+					type: "pie",
+					radius: "70%",
+					label: {
+						show: true,
+						position: "outside",
+						color: isDarkMode ? "#fff" : "#000",
+					},
+					data: data,
+				},
+			],
+		};
+
+		chartInstance.setOption(option);
+	}
 });
 </script>
 
@@ -384,7 +279,27 @@ onMounted(() => {
 	box-shadow: 0 4px 10px rgba(255, 255, 255, 0.2); /* 白色阴影，适用于深色模式 */
 }
 
-.vxe-button.type--text:not(.is--disabled):hover {
-	color: var(--color-main) !important;
+/* 图表样式 */
+.chartCard {
+	flex: 0 0 calc(50% - 1rem);
+	height: calc(50% - 1rem);
+	min-height: 200px;
+	background-color: var(--bg-card);
+	color: var(--text-color-main);
+	border: solid 2px transparent;
+	transition:
+		box-shadow 0.3s ease,
+		border 0.3s ease;
+	overflow: hidden;
+}
+
+/* 鼠标悬停时 */
+.chartCard:hover {
+	border-color: var(--color-main);
+	cursor: pointer;
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* 默认黑色阴影，适用于浅色模式 */
+	transition:
+		border 0.7s ease,
+		box-shadow 0.3s ease;
 }
 </style>
