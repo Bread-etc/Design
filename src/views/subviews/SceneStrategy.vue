@@ -26,7 +26,7 @@
 		</div>
 
 		<!-- 情景任务 -->
-		<div class="mb-2">
+		<div>
 			<a-divider style="border-color: var(--color-main)">情景任务</a-divider>
 			<div class="d-flex gap-5 overflow-x-auto px-2 scene-list">
 				<div
