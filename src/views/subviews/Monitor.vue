@@ -9,8 +9,21 @@
 					class="w-100 h-100 d-flex justify-content-center align-items-center"
 				></div>
 			</div>
-			<div class="chartCard rounded-3 d-flex justify-content-center align-items-center">
-				告警列表
+			<div class="chartCard rounded-3 d-flex flex-column p-3 w-100">
+				<a-divider class="m-0" style="border-color: var(--color-main)">告警列表</a-divider>
+				<div style="max-height: 20%" v-if="alarmList?.rows?.length">
+					<div
+						v-for="item in alarmList.rows"
+						class="d-flex justify-content-between align-items-center p-2"
+					>
+						<strong>告警名称:</strong> {{ item.policyName }} <br />
+						<strong>告警等级:</strong> {{ item.rankName }} <br />
+						<strong>告警内容:</strong> {{ item.alarmContent }}
+					</div>
+				</div>
+				<div v-else class="text-muted d-flex justify-content-center align-items-center h-100">
+					暂无告警数据
+				</div>
 			</div>
 			<div class="chartCard rounded-3 d-flex justify-content-center align-items-center">
 				<div
@@ -18,15 +31,26 @@
 					class="w-100 h-100 d-flex justify-content-center align-items-center"
 				></div>
 			</div>
-			<div class="chartCard rounded-3 d-flex justify-content-center align-items-center">
-				巡检列表
+			<div class="chartCard rounded-3 d-flex flex-column p-3">
+				<a-divider class="m-0" style="border-color: var(--color-main)">巡检列表</a-divider>
+				<div style="max-height: 20%" v-if="pollingList.length">
+					<div
+						v-for="poll in pollingList"
+						class="d-flex justify-content-between align-items-center p-2"
+					>
+						<div>{{ poll.name }}</div>
+						<div>{{ poll.description }}</div>
+					</div>
+				</div>
+				<div v-else class="text-muted d-flex justify-content-center align-items-center h-100">
+					暂无巡检任务
+				</div>
 			</div>
 		</div>
 	</div>
 </template>
 
 <script lang="ts" setup>
-import type { DeviceGetAllVirDevTypeParams } from "@/api/interface/device/DeviceGetAllVirDevType";
 import type {
 	DeviceGetStatusInner,
 	DeviceGetStatusParams,
@@ -45,7 +69,7 @@ import * as echarts from "echarts";
 // 巡检策略列表
 const pollingList = ref<{ description: string; id: number; name: string }[]>([]);
 // 告警列表
-const alarmList = ref<MonitorGetAlarmLogListResult["data"] | {}>({});
+const alarmList = ref<MonitorGetAlarmLogListResult["data"]>();
 // 设备类型列表
 const deviceTypeList = ref<{ type_id: string; type_name: string; model: string }[]>([]);
 // 设备信息列表
@@ -87,9 +111,13 @@ const fetchGetAlarmLogList = async () => {
 	}
 };
 
-const fetchGetAllVirDevType = async (params: DeviceGetAllVirDevTypeParams) => {
+const fetchGetAllVirDevType = async () => {
 	try {
-		const res = await deviceGetAllVirDevTypeService.getAllVirDevType(params);
+		const res = await deviceGetAllVirDevTypeService.getAllVirDevType({
+			appName: null,
+			current: 1,
+			rowCount: 20,
+		});
 		deviceTypeList.value = res.data;
 	} catch (error) {
 		console.error(error);
@@ -136,11 +164,7 @@ const filterEmptyObject = (res: DeviceGetStatusResult) => {
 onMounted(async () => {
 	await fetchGetPollingPolicy();
 	await fetchGetAlarmLogList();
-	await fetchGetAllVirDevType({
-		appName: null,
-		current: 1,
-		rowCount: 20,
-	});
+	await fetchGetAllVirDevType();
 
 	// 获取设备状态
 	let D = await fetchGetStatus(constructReq(deviceTypeList));
@@ -148,9 +172,8 @@ onMounted(async () => {
 		deviceInfo.value = filterEmptyObject(D);
 	}
 
-	// console.log("巡检策略列表:", pollingList.value);
-	// console.log("告警列表:", alarmList.value);
-	// console.log("设备信息:", deviceInfo.value);
+	console.log("巡检策略列表:", pollingList.value);
+	console.log("告警列表:", alarmList.value);
 
 	// 确保 DOM 渲染完成后再初始化 ECharts
 	await nextTick();
@@ -301,5 +324,9 @@ onMounted(async () => {
 	transition:
 		border 0.7s ease,
 		box-shadow 0.3s ease;
+}
+
+:deep(.ant-divider-inner-text) {
+	color: var(--text-color-main) !important;
 }
 </style>

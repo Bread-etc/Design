@@ -15,7 +15,7 @@ export interface MonitorGetAlarmLogListResult {
 	data: {
 		current: number;
 		rowCount: number;
-		rows: {
+		rows: Array<{
 			alarmContent: string;
 			alarmMode: string;
 			alarmNotify: string;
@@ -37,7 +37,7 @@ export interface MonitorGetAlarmLogListResult {
 			spaceName: string;
 			typeId: string;
 			typeName: string;
-		};
+		}> | null;
 		total: number;
 	};
 	success: boolean;
