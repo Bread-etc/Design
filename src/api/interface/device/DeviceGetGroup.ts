@@ -4,8 +4,6 @@ export interface DeviceGetGroupParams {
 	app_id: number | null;
 	type_names: string[];
 }
-
-// 定义子节点对象的接口
 interface ChildNode {
 	/* 空间 */
 	groupId?: number;
@@ -15,20 +13,13 @@ interface ChildNode {
 	deviceId?: string;
 	deviceName?: string;
 	typeId?: string;
-	id?: string; // 为空间则是 space_id 为硬件则是 设备ID
+	id?: string; // 空间 = space_id 硬件 = 设备ID
 	typeName?: string;
 	/* 公共 */
-	leaf: boolean; // 是否为叶子节点，若为设备则为true
+	leaf: boolean;
 	children?: Record<string, ChildNode>;
 }
-
-// 定义 data 对象的接口
-interface ResponseData {
-	[key: string]: ChildNode;
-}
-
-// 定义整个响应的接口
 export interface DeviceGetGroupResult {
 	success: boolean;
-	data: ResponseData;
+	data: { [key: string]: ChildNode };
 }

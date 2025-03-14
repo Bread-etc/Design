@@ -34,11 +34,11 @@ class Request {
 		return this.request<T>({
 			method: "post",
 			url,
-			data: body, // 正确传递数据
+			data: body,
 			headers: {
 				"Content-Type": "application/json",
 				...outHeaders,
-			}, // 正确传递头部信息
+			},
 		});
 	}
 

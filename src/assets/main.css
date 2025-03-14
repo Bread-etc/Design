@@ -5,13 +5,10 @@
 	display: flex;
 	flex-direction: column;
 	min-height: 100vh;
-
-	/* 水平居中内容 */
+	background-color: transparent;
 	justify-content: center;
 	align-items: center;
 
-	/* 背景颜色可根据需要修改，或者保持透明继承自 body */
-	background-color: transparent;
 
 	/* 确保在移动设备上触摸操作的兼容性 */
 	-webkit-tap-highlight-color: transparent;

@@ -44,6 +44,5 @@ export const useUserStore = defineStore("user", {
 			this.role = "";
 		},
 	},
-	// 启用持久化
 	persist: true,
 });
