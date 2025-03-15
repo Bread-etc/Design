@@ -33,7 +33,7 @@ export default defineConfig(({ command }: ConfigEnv) => {
 			port: 3000,
 			proxy: {
 				"/api": {
-					target: "https://100a84de.r1.cpolar.top",
+					target: "https://f6d5eec.r1.cpolar.top",
 					changeOrigin: true,
 					rewrite: (path) => path.replace(/^\/api/, ""),
 				},

@@ -1,5 +1,6 @@
 import axios, { type AxiosInstance, type AxiosRequestConfig, type AxiosResponse } from "axios";
 import { showToast } from "./toast";
+import spin from "ant-design-vue/es/spin";
 class Request {
 	baseURL: string;
 	timeout: number;

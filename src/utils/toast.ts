@@ -19,7 +19,8 @@ export function showToast(
 		toastContainer.className = `
             position-fixed top-0 end-0 p-3
         `;
-		toastContainer.style.zIndex = "1050"; // 确保 Toast 在最前方
+		// 确保 Toast 在最前方
+		toastContainer.style.zIndex = "1050";
 		document.body.appendChild(toastContainer);
 	}
 

@@ -6,7 +6,7 @@
 			<div
 				v-for="item in deviceList"
 				:key="item.id"
-				class="d-flex flex-column align-items-center text-center mx-2"
+				class="d-flex flex-column align-items-center text-center mx-3"
 			>
 				<img src="../../assets/images/device_card.png" class="user-select-none" alt="设备图片" />
 

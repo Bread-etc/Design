@@ -12,7 +12,7 @@ const router = createRouter({
 			name: "home",
 			component: HomeView,
 			meta: { requiresAuth: true },
-			redirect: { name: "device" }, // 默认重定向到device
+			redirect: { name: "device" },
 			children: [
 				{
 					name: "device",

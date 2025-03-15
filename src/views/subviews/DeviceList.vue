@@ -19,7 +19,7 @@
 					<span class="fw-bold">设备详情</span>
 					<div>
 						<span class="text-muted me-5" style="font-size: 0.8rem"
-							>软件版本: {{ selectedItem[0]?.softVer || "version" }}</span
+							>软件版本: {{ selectedItem[0]?.softVer || "$version" }}</span
 						>
 						<span class="text-muted" style="font-size: 0.8rem"
 							>在线时间: {{ selectedItem[0]?.onlineTime || "$time" }}</span
@@ -155,7 +155,7 @@ const filteredColumns = computed(() => {
 });
 
 /* 网络请求 */
-const handleGetAllDevType = async (params: DeviceGetAllDevTypeParams) => {
+const fetchGetAllDevType = async (params: DeviceGetAllDevTypeParams) => {
 	try {
 		const res = await deviceGetAllDevTypeService.getAllDevType(params);
 		hardwareTypeList.value = res.data;
@@ -164,7 +164,7 @@ const handleGetAllDevType = async (params: DeviceGetAllDevTypeParams) => {
 	}
 };
 
-const handleGetAllVirDevType = async (params: DeviceGetAllVirDevTypeParams) => {
+const fetchGetAllVirDevType = async (params: DeviceGetAllVirDevTypeParams) => {
 	try {
 		const res = await deviceGetAllVirDevTypeService.getAllVirDevType(params);
 		deviceTypeList.value = res.data;
@@ -173,7 +173,7 @@ const handleGetAllVirDevType = async (params: DeviceGetAllVirDevTypeParams) => {
 	}
 };
 
-const handleGetStatus = async (params: DeviceGetStatusParams) => {
+const fetchGetStatus = async (params: DeviceGetStatusParams) => {
 	try {
 		const res = await deviceGetStatusService.getStatus(params);
 		return res;
@@ -227,19 +227,19 @@ const handleSelect = (selectedKeys: string[]) => {
 
 /* 生命周期 */
 onMounted(async () => {
-	await handleGetAllDevType({
+	await fetchGetAllDevType({
 		tag: null,
 		current: 1,
 		rowCount: 20,
 	});
-	await handleGetAllVirDevType({
+	await fetchGetAllVirDevType({
 		appName: null,
 		current: 1,
 		rowCount: 20,
 	});
 	// 再根据上面的内容获取硬件/设备状态
-	let H = await handleGetStatus(constructReq(hardwareTypeList));
-	let D = await handleGetStatus(constructReq(deviceTypeList));
+	let H = await fetchGetStatus(constructReq(hardwareTypeList));
+	let D = await fetchGetStatus(constructReq(deviceTypeList));
 	if (H && D) {
 		hardwareInfo.value = filterEmptyObject(H);
 		deviceInfo.value = filterEmptyObject(D);

@@ -15,10 +15,17 @@
 					<div
 						v-for="item in alarmList.rows"
 						class="d-flex justify-content-between align-items-center p-2"
+						style="font-size: 14px"
 					>
-						<strong>告警名称:</strong> {{ item.policyName }} <br />
-						<strong>告警等级:</strong> {{ item.rankName }} <br />
-						<strong>告警内容:</strong> {{ item.alarmContent }}
+						<div class="text-nowrap overflow-hidden text-ellipsis fw-bold">
+							{{ item.policyName }}
+						</div>
+						<div class="text-nowrap overflow-hidden text-ellipsis" style="color: var(--color-main)">
+							{{ item.rankName }}
+						</div>
+						<div class="col-8 d-inline-block overflow-x-auto white-space-nowrap">
+							{{ item.alarmContent }}
+						</div>
 					</div>
 				</div>
 				<div v-else class="text-muted d-flex justify-content-center align-items-center h-100">
@@ -38,7 +45,7 @@
 						v-for="poll in pollingList"
 						class="d-flex justify-content-between align-items-center p-2"
 					>
-						<div>{{ poll.name }}</div>
+						<div class="fw-bold">{{ poll.name }}</div>
 						<div>{{ poll.description }}</div>
 					</div>
 				</div>
@@ -101,7 +108,7 @@ const fetchGetAlarmLogList = async () => {
 			alarmRanks: ["1", "2", "3", "4"],
 			dealMethod: "UnRead",
 			timeStart: "2025-03-01 00:00:00",
-			timeEnd: "2025-04-01 20:00:00",
+			timeEnd: "2025-06-01 20:00:00",
 			current: 1,
 			rowCount: 20,
 		});
@@ -171,9 +178,6 @@ onMounted(async () => {
 	if (D) {
 		deviceInfo.value = filterEmptyObject(D);
 	}
-
-	console.log("巡检策略列表:", pollingList.value);
-	console.log("告警列表:", alarmList.value);
 
 	// 确保 DOM 渲染完成后再初始化 ECharts
 	await nextTick();
