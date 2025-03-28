@@ -13,7 +13,7 @@
 					style="background-color: var(--bg-card); width: 18%"
 				>
 					<img
-						src="@/assets/images/scene_icon.png"
+						src="@/assets/images/scene_icon.webp"
 						alt="场景图标"
 						class="mb-2 rounded-2 p-2"
 						style="background-color: var(--color-main)"
@@ -36,7 +36,7 @@
 					style="background-color: var(--bg-card); width: 18%"
 				>
 					<img
-						src="@/assets/images/scene_icon.png"
+						src="@/assets/images/scene_icon.webp"
 						alt="任务图标"
 						class="mb-2 rounded-2 p-2"
 						style="background-color: var(--color-main)"
@@ -60,7 +60,6 @@ import { onMounted, ref } from "vue";
 const spaceSceneList = ref<{ id: number; name: string; desc: string }[]>([]);
 // 情景任务列表
 const sceneTaskList = ref<{ id: number; name: string; desc: string }[]>([]);
-const execResult = ref<string[]>([]);
 
 /* 网络请求 */
 const fetchSceneList = async () => {

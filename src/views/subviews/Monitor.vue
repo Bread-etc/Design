@@ -183,7 +183,7 @@ onMounted(async () => {
 	await nextTick();
 
 	if (chartDomOne.value) {
-		// **计算可用与不可用设备数量**
+		// 计算可用与不可用设备数量
 		let availableCount = deviceInfo.value.length;
 		let unavailableCount = deviceTypeList.value.length - availableCount;
 		const chartInstance = echarts.init(chartDomOne.value);

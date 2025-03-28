@@ -20,7 +20,7 @@
 
 			<!-- 中央图片区域 -->
 			<div class="d-flex">
-				<img src="@/assets/images/LoRaPlug.png" alt="设备图像" />
+				<img src="@/assets/images/LoRaPlug.webp" alt="设备图像" />
 			</div>
 
 			<!-- 右侧信息区域 -->

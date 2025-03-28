@@ -8,7 +8,7 @@
 				:key="item.id"
 				class="d-flex flex-column align-items-center text-center mx-3"
 			>
-				<img src="../../assets/images/device_card.png" class="user-select-none" alt="设备图片" />
+				<img src="../../assets/images/device_card.webp" class="user-select-none" alt="设备图片" />
 
 				<!-- 设备名称 -->
 				<div class="mt-2 fw-bold user-select-none" style="font-size: 14px">
