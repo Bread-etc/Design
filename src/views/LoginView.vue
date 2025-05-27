@@ -47,7 +47,7 @@
 			style="background-color: var(--color-main)"
 		>
 			<img
-				src="../assets/images/LoginPic.svg"
+				src="../assets/images/LoginPic.webp"
 				alt="LoginPic"
 				draggable="false"
 				class="p-5 img-fluid"

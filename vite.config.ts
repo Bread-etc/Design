@@ -4,9 +4,9 @@ import Components from "unplugin-vue-components/vite";
 import { AntDesignVueResolver } from "unplugin-vue-components/resolvers";
 import vue from "@vitejs/plugin-vue";
 import ViteCompression from "vite-plugin-compression";
+import LegacyPlugin from "@vitejs/plugin-legacy";
 
-const PORT = 3000;
-const API_TARGET = "https://15bff5f7.r1.cpolar.top";
+const API_TARGET = "https://6b1ec566.r8.cpolar.top";
 
 // vite 配置项
 export default defineConfig(() => {
@@ -16,13 +16,20 @@ export default defineConfig(() => {
 			Components({
 				resolvers: [
 					AntDesignVueResolver({
-						importStyle: false, // css in js
+						importStyle: "less",
 					}),
 				],
 			}),
 			// 启动 Brotli 压缩
 			ViteCompression({
 				algorithm: "brotliCompress",
+				ext: ".js,.css,.html,.webp",
+				threshold: 10240,
+				deleteOriginFile: false,
+			}),
+			LegacyPlugin({
+				targets: ["chrome 52", "Android > 39", "iOS >= 10.3", "iOS >= 10.3"],
+				additionalLegacyPolyfills: ["regenerator-runtime/runtime"],
 			}),
 		],
 		resolve: {
@@ -35,19 +42,19 @@ export default defineConfig(() => {
 				sass: {
 					api: "legacy",
 				},
+				less: {
+					javascriptEnabled: true,
+				},
 			},
 		},
 		server: {
-			port: PORT,
+			port: 3000,
 			proxy: {
 				"/api": {
 					target: API_TARGET,
 					changeOrigin: true,
 					rewrite: (path) => path.replace(/^\/api/, ""),
 				},
-			},
-			headers: {
-				"cache-control": "public, max-age=3600",
 			},
 		},
 		build: {
@@ -56,6 +63,15 @@ export default defineConfig(() => {
 				compress: {
 					drop_console: true,
 					drop_debugger: true,
+				},
+			},
+			rollupOptions: {
+				output: {
+					manualChunks(id) {
+						if (id.includes("node_modules")) {
+							return id.toString().split("node_modules/")[1].split("/")[0].toString();
+						}
+					},
 				},
 			},
 		},
